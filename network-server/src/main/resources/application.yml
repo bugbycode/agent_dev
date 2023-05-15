@@ -2,11 +2,11 @@ spring:
   main:
     web-application-type: NONE
   keystore:
-    path: server.p12
+    path: config/server.p12
     password: china@
   netty:
     port: 36500 #代理端口
     so_backlog: 4096
     nThreads: 4096
 loggin:
-  config: classpath:log4j2.xml        
+  config: classpath:log4j2.xml
