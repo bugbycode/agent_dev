@@ -1,6 +1,58 @@
 # agent_dev
 这是一个使用netty实现网络代理的简单实例，本项目仅供学习研究使用。
 
+## 自签发数字证书
+
+1、创建数字证书颁发机构 CAManager.p12
+```
+keytool -genkeypair -keystore CAManager.p12 -dname "CN=证书颁发中心, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias CAManager -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 3650
+```
+2、导出颁发机构根证书 CAManager.cer
+```
+keytool -exportcert -alias CAManager -keystore CAManager.p12 -file CAManager.cer -storepass "china@" -storetype "PKCS12"
+```
+
+3、创建服务端使用的秘钥库 server.p12
+```
+keytool -genkeypair -keystore server.p12 -dname "CN=43.163.235.126, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias server -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
+```
+4、创建服务端证书请求 server.csr
+```
+keytool -certreq -alias server -keystore server.p12 -file server.csr -keypass "china@" -storepass "china@"
+```
+5、使用证书请求文件 server.csr 到证书颁发机构 CAManager.p12 申请服务端使用的证书 server.cer
+```
+keytool -gencert -alias CAManager -keystore CAManager.p12 -infile server.csr -outfile server.cer -keypass "china@" -storepass "china@" -validity 1000
+```
+6、将数字证书颁发机构根证书CAManager.cer导入server.p12中
+```
+keytool -importcert -alias CAManager -file CAManager.cer -keystore server.p12 -keypass "china@" -storepass "china@" -storetype "PKCS12"
+```
+7、将第5步骤得到的server.cer导入到第3步骤得到的server.p12中
+keytool -importcert -alias server -keystore server.p12 -storetype "PKCS12" -keypass "china@" -storepass "china@" -file server.cer
+```
+
+8、创建客户端使用的秘钥库 client.p12
+```
+keytool -genkeypair -keystore client.p12 -dname "CN=client, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias client -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
+```
+9、创建客户端证书请求 client.csr
+```
+keytool -certreq -alias client -keystore client.p12 -file client.csr -keypass "china@" -storepass "china@"
+```
+10、使用证书请求文件 client.csr 到证书颁发机构 CAManager.p12 申请服务端使用的证书 client.cer
+```
+keytool -gencert -alias CAManager -keystore CAManager.p12 -infile client.csr -outfile client.cer -keypass "china@" -storepass "china@" -validity 1000
+```
+11、将数字证书颁发机构根证书CAManager.cer导入client.p12中
+```
+keytool -importcert -alias CAManager -file CAManager.cer -keystore client.p12 -keypass "china@" -storepass "china@" -storetype "PKCS12"
+```
+12、将第10步骤得到的client.cer导入到第8步骤得到的client.p12中
+```
+keytool -importcert -alias client -keystore client.p12 -storetype "PKCS12" -keypass "china@" -storepass "china@" -file client.cer
+```
+
 ## 代理客户端配置
 
 1、修改network-agent配置文件src/main/resources/application.yml中的spring.netty.auth.host为network-server所部属的ip或域名如下所示：
