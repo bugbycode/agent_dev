@@ -8,6 +8,11 @@
 server:
   port: 8787
 spring:
+#  main:
+#    web-application-type: NONE
+  keystore:
+    path: client.p12
+    password: china@
   server:
     datasource:
       url: jdbc:sqlite:data.db
@@ -26,13 +31,17 @@ loggin:
 1、修改network-server配置文件src/main/resources/application.yml中的spring.netty.port为自己希望监听的端口如下所示：
 ```
 spring:
-  main:  
-    web-application-type: NONE    
-  netty:  
-    port: 36500 #代理端口    
-    so_backlog: 1000    
+  main:
+    web-application-type: NONE
+  keystore:
+    path: server.p12
+    password: china@
+  netty:
+    port: 36500 #代理端口
+    so_backlog: 4096
+    nThreads: 4096
 loggin:
-  config: classpath:log4j2.xml  
+  config: classpath:log4j2.xml
 ```
 ## 部署方式
 在境外服务器上部署network-server 在自己电脑上部署network-agent
