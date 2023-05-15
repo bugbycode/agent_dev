@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<title>网络代理管理中心</title>
+		<meta charset="UTF-8">
+		<meta http-equiv=Content-Type content="text/html; charset=utf-8" />
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<style type="text/css">
+			*{
+		        margin: 0;
+		        padding: 0;
+		      }
+			.el-menu{
+			    height: 45px;
+			    padding-top: 10px;
+			}
+			.hand{
+			    cursor:pointer
+			}
+			.title{
+			    color: white;
+			    font-size: 2em;
+			    margin-left: 10px;
+			    font-family: 华文行楷;
+			    font-weight: bolder;
+			    outline: none;
+			}
+			.br-line{
+			    display: block;
+			    height: 15px;
+			}
+			
+			.pageCard{
+				margin: 15px 15px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row>
+				<el-col :span="24">
+					<el-menu
+			        class="el-menu-demo"
+			        mode="horizontal"
+			        background-color="#545c64"
+			        text-color="#fff"
+			        active-text-color="#ffd04b">
+			        <span class="title hand">网络代理管理中心</span>
+			        </el-menu>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :span="24">
+					<el-card class="box-card pageCard">
+			            <div slot="header" class="clearfix">
+			                <el-input
+			                	@keydown.native.enter="query(input1,0,page.pageSize)"
+							    placeholder="请输入站点域名或IP地址搜索"
+							    prefix-icon="el-icon-search"
+							    v-model="input1">
+							</el-input>
+			            	<div class="br-line"></div>
+			            	<el-pagination
+		                        @size-change="handleSizeChange"
+		                        @current-change="handleCurrentChange"
+		                        :current-page="page.currentPage"
+		                        :page-sizes="[20, 50,100]"
+		                        :page-size="page.pageSize"
+		                        layout="total, sizes, prev, pager, next, jumper"
+		                        :total="page.totalCount">
+		                    </el-pagination>
+			            	<div class="br-line"></div>
+							<el-table
+		                        :data="tableData"
+		                        border
+		                        stripe
+		                        :row-style="{height:'5px'}"
+		                        :cell-style="{padding: '5px 5px'}"
+		                        style="width: 100%">
+		                        <el-table-column
+		                        type="selection"
+		                        width="55">
+		                        </el-table-column>
+		                        <el-table-column
+		                        prop="host"
+		                        label="最近访问的站点">
+		                        </el-table-column>
+		                        <el-table-column 
+		                        width="300"
+		                        prop="connTime"
+		                        label="访问时间">
+		                        </el-table-column>
+		                        <el-table-column 
+		                        width="150"
+		                        label="访问结果">
+		                        	<template slot-scope="scope">
+		                        		<el-tag size="mini" type="success" v-if="scope.row.result == 1">成功</el-tag>
+		                        		<el-tag size="mini" type="danger" v-if="scope.row.result == 0">失败</el-tag>
+		                        	</template>
+		                        </el-table-column>
+		                        <el-table-column 
+		                        width="150"
+		                        label="是否通过代理转发">
+		                        	<template slot-scope="scope">
+		                        		<el-select size="mini" v-model="scope.row.forward" placeholder="请选择" @change="changeForward(scope.row)">
+										    <el-option
+										      v-for="item in forwardOption"
+										      :key="item.key"
+										      :label="item.label"
+										      :value="item.key">
+										    </el-option>
+										 </el-select>
+		                        	</template>
+		                        </el-table-column>
+		                    </el-table>
+		                    <div class="br-line"></div>
+		                    <el-pagination
+		                        @size-change="handleSizeChange"
+		                        @current-change="handleCurrentChange"
+		                        :current-page="page.currentPage"
+		                        :page-sizes="[20, 50,100]"
+		                        :page-size="page.pageSize"
+		                        layout="total, sizes, prev, pager, next, jumper"
+		                        :total="page.totalCount">
+		                    </el-pagination>
+			            </div>
+			        </el-card>
+				</el-col>
+			</el-row>
+		</div>
+	</body>
+	<!-- import Vue before Element -->
+  	<script src="vue/dist/vue.js"></script>
+  	<!-- 引入组件库 -->
+	<script src="element-ui/lib/index.js"></script>
+	<script src="axios/dist/axios.min.js"></script>
+	<script>
+	//const axios = require('axios');
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+        	input1:'',
+        	tableData:[],
+        	page: {
+                currentPage: 1,
+                pageCount: 1,
+                pageSize: 20,
+                startIndex: 0,
+                totalCount: 1,
+            },
+            forwardOption:[
+            	{
+            		key:0,
+            		label:'否'
+            	},{
+            		key:1,
+            		label:'是'
+            	}
+            ]
+        }
+      },mounted(){
+          this.query(this.input1,this.page.startIndex,this.page.pageSize);
+      },methods:{
+    	  changeForward(row){
+    		  let vue = this;
+              axios.post('/updateForwardById?id=' + row.id 
+            		  + '&forward=' + row.forward).then(function(result){
+                  console.log(result);
+              }).catch(function(e){
+                  console.log(e);
+              })
+    		  
+    	  },query(keyword,offset,limit) {
+              let vue = this;
+              axios.get('/query',{
+                  params:{
+                      queryParam:keyword,
+                      offset:offset,
+                      limit:limit,
+                  }
+              }).then(function(result){
+                  vue.tableData = result.data.list;
+                  let page = result.data.page;
+                  vue.page.currentPage = page.currentPage;
+                  vue.page.pageCount = page.pageCount;
+                  vue.page.pageSize = page.pageSize;
+                  vue.page.startIndex = page.startIndex;
+                  vue.page.totalCount = page.totalCount;
+              }).catch(function(e){
+                  console.log(e);
+              })
+          },
+          //分页处理
+          handleSizeChange(val){
+              this.page.pageSize = val;
+              this.page.startIndex = 0;
+              this.query(this.input1,this.page.startIndex,this.page.pageSize);
+          },handleCurrentChange(val){
+              var offset = val * this.page.pageSize - this.page.pageSize;
+              this.page.startIndex = offset;
+              this.query(this.input1,this.page.startIndex,this.page.pageSize);
+          }
+      }
+    })
+  </script>
+</html>

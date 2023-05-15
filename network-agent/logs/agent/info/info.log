@@ -1,0 +1,355 @@
+2023-05-15 11:35:53.484 INFO [main][StartupInfoLogger.java:50] - Starting Application on lucky-PC with PID 6928 (D:\dev\agent_dev\network-agent\target\classes started by Administrator in D:\dev\agent_dev\network-agent)
+2023-05-15 11:35:53.500 INFO [main][SpringApplication.java:675] - No active profile set, falling back to default profiles: default
+2023-05-15 11:35:55.706 INFO [main][TomcatWebServer.java:90] - Tomcat initialized with port(s): 8787 (http)
+2023-05-15 11:35:55.721 INFO [main][DirectJDKLog.java:180] - Initializing ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:35:55.732 INFO [main][DirectJDKLog.java:180] - Starting service [Tomcat]
+2023-05-15 11:35:55.733 INFO [main][DirectJDKLog.java:180] - Starting Servlet Engine: Apache Tomcat/8.5.32
+2023-05-15 11:35:55.951 INFO [localhost-startStop-1][DirectJDKLog.java:180] - Initializing Spring embedded WebApplicationContext
+2023-05-15 11:35:55.951 INFO [localhost-startStop-1][ServletWebServerApplicationContext.java:296] - Root WebApplicationContext: initialization completed in 2364 ms
+2023-05-15 11:35:56.833 INFO [main][WelcomePageHandlerMapping.java:56] - Adding welcome page: class path resource [public/index.html]
+2023-05-15 11:35:57.007 INFO [main][DirectJDKLog.java:180] - Starting ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:35:57.007 INFO [main][DirectJDKLog.java:180] - Using a shared selector for servlet write/read
+2023-05-15 11:35:57.034 INFO [main][TomcatWebServer.java:204] - Tomcat started on port(s): 8787 (http) with context path ''
+2023-05-15 11:35:57.038 INFO [main][StartupInfoLogger.java:59] - Started Application in 3.957 seconds (JVM running for 4.532)
+2023-05-15 11:35:58.097 INFO [nioEventLoopGroup-3-1][AgentServer.java:85] - Agent server startup successfully, port 50000......
+2023-05-15 11:36:39.833 INFO [main][StartupInfoLogger.java:50] - Starting Application on lucky-PC with PID 5744 (D:\dev\agent_dev\network-agent\target\classes started by Administrator in D:\dev\agent_dev\network-agent)
+2023-05-15 11:36:39.833 INFO [main][SpringApplication.java:675] - No active profile set, falling back to default profiles: default
+2023-05-15 11:36:41.990 INFO [main][TomcatWebServer.java:90] - Tomcat initialized with port(s): 8787 (http)
+2023-05-15 11:36:42.015 INFO [main][DirectJDKLog.java:180] - Initializing ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:36:42.028 INFO [main][DirectJDKLog.java:180] - Starting service [Tomcat]
+2023-05-15 11:36:42.029 INFO [main][DirectJDKLog.java:180] - Starting Servlet Engine: Apache Tomcat/8.5.32
+2023-05-15 11:36:42.271 INFO [localhost-startStop-1][DirectJDKLog.java:180] - Initializing Spring embedded WebApplicationContext
+2023-05-15 11:36:42.272 INFO [localhost-startStop-1][ServletWebServerApplicationContext.java:296] - Root WebApplicationContext: initialization completed in 2390 ms
+2023-05-15 11:36:43.079 INFO [main][WelcomePageHandlerMapping.java:56] - Adding welcome page: class path resource [public/index.html]
+2023-05-15 11:36:43.231 INFO [main][DirectJDKLog.java:180] - Starting ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:36:43.231 INFO [main][DirectJDKLog.java:180] - Using a shared selector for servlet write/read
+2023-05-15 11:36:43.247 INFO [main][TomcatWebServer.java:204] - Tomcat started on port(s): 8787 (http) with context path ''
+2023-05-15 11:36:43.247 INFO [main][StartupInfoLogger.java:59] - Started Application in 3.903 seconds (JVM running for 4.422)
+2023-05-15 11:36:43.783 INFO [nioEventLoopGroup-3-1][AgentServer.java:85] - Agent server startup successfully, port 50000......
+2023-05-15 11:36:44.416 INFO [nioEventLoopGroup-2-1][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:36:44.468 INFO [nioEventLoopGroup-2-1][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:36:54.948 INFO [nioEventLoopGroup-2-2][NettyClient.java:80] - Connection to mtalk.google.com:443 successfully.
+2023-05-15 11:37:07.395 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:37:07.412 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:37:32.874 INFO [main][StartupInfoLogger.java:50] - Starting Application on lucky-PC with PID 5428 (D:\dev\agent_dev\network-agent\target\classes started by Administrator in D:\dev\agent_dev\network-agent)
+2023-05-15 11:37:32.889 INFO [main][SpringApplication.java:675] - No active profile set, falling back to default profiles: default
+2023-05-15 11:37:36.255 INFO [main][TomcatWebServer.java:90] - Tomcat initialized with port(s): 8787 (http)
+2023-05-15 11:37:36.288 INFO [main][DirectJDKLog.java:180] - Initializing ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:37:36.303 INFO [main][DirectJDKLog.java:180] - Starting service [Tomcat]
+2023-05-15 11:37:36.319 INFO [main][DirectJDKLog.java:180] - Starting Servlet Engine: Apache Tomcat/8.5.32
+2023-05-15 11:37:36.558 INFO [localhost-startStop-1][DirectJDKLog.java:180] - Initializing Spring embedded WebApplicationContext
+2023-05-15 11:37:36.558 INFO [localhost-startStop-1][ServletWebServerApplicationContext.java:296] - Root WebApplicationContext: initialization completed in 3582 ms
+2023-05-15 11:37:37.812 INFO [main][WelcomePageHandlerMapping.java:56] - Adding welcome page: class path resource [public/index.html]
+2023-05-15 11:37:38.040 INFO [main][DirectJDKLog.java:180] - Starting ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:37:38.041 INFO [main][DirectJDKLog.java:180] - Using a shared selector for servlet write/read
+2023-05-15 11:37:38.075 INFO [main][TomcatWebServer.java:204] - Tomcat started on port(s): 8787 (http) with context path ''
+2023-05-15 11:37:38.090 INFO [main][StartupInfoLogger.java:59] - Started Application in 5.997 seconds (JVM running for 7.194)
+2023-05-15 11:37:38.754 INFO [nioEventLoopGroup-3-1][AgentServer.java:85] - Agent server startup successfully, port 50000......
+2023-05-15 11:37:39.404 INFO [nioEventLoopGroup-2-1][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:37:39.569 INFO [nioEventLoopGroup-2-1][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:37:40.091 INFO [nioEventLoopGroup-2-2][NettyClient.java:80] - Connection to mtalk.google.com:443 successfully.
+2023-05-15 11:37:47.581 INFO [nioEventLoopGroup-2-4][NettyClient.java:80] - Connection to www.gstatic.com:443 successfully.
+2023-05-15 11:37:48.869 INFO [nioEventLoopGroup-2-5][NettyClient.java:80] - Connection to fonts.gstatic.com:443 successfully.
+2023-05-15 11:38:07.993 INFO [nioEventLoopGroup-2-3][NettyClient.java:85] - Connection to www.google.com:443 failed.
+2023-05-15 11:38:16.408 INFO [nioEventLoopGroup-2-6][NettyClient.java:80] - Connection to www.gstatic.com:80 successfully.
+2023-05-15 11:38:23.442 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:38:23.979 INFO [nioEventLoopGroup-2-7][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:38:24.010 INFO [nioEventLoopGroup-2-7][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:38:25.063 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.01b18c6b1dfbaed20623441ebd151460
+2023-05-15 11:38:25.063 INFO [Thread-10][AgentHandler.java:352] - Client closed.01b18c6b1dfbaed20623441ebd151460
+2023-05-15 11:38:55.615 INFO [nioEventLoopGroup-2-8][NettyClient.java:80] - Connection to clientservices.googleapis.com:443 successfully.
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.9cfffd8396fc9a561e6dafb481b0d7c4
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.f7c4eb6955078c1b919a952ad6793e5a
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-4-4][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-2-4][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-2-5][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:39:19.247 INFO [nioEventLoopGroup-4-3][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:39:19.247 INFO [Thread-7][AgentHandler.java:352] - Client closed.9cfffd8396fc9a561e6dafb481b0d7c4
+2023-05-15 11:39:19.247 INFO [Thread-8][AgentHandler.java:352] - Client closed.f7c4eb6955078c1b919a952ad6793e5a
+2023-05-15 11:39:20.046 INFO [nioEventLoopGroup-2-9][NettyClient.java:80] - Connection to miao.baidu.com:443 successfully.
+2023-05-15 11:39:21.013 INFO [nioEventLoopGroup-2-7][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:39:24.088 INFO [nioEventLoopGroup-2-10][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:39:24.105 INFO [nioEventLoopGroup-2-10][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:39:53.611 INFO [nioEventLoopGroup-4-7][AgentHandler.java:270] - User client exit.4cba9693f497ccf2934573b6327e01f8
+2023-05-15 11:39:53.611 INFO [nioEventLoopGroup-2-9][NettyClient.java:119] - Disconnection to miao.baidu.com:443 .
+2023-05-15 11:39:53.611 INFO [Thread-12][AgentHandler.java:352] - Client closed.4cba9693f497ccf2934573b6327e01f8
+2023-05-15 11:40:06.621 INFO [nioEventLoopGroup-2-11][NettyClient.java:80] - Connection to cdn.growthbook.io:443 successfully.
+2023-05-15 11:40:08.345 INFO [nioEventLoopGroup-2-10][ClientHandler.java:92] - Channel timeout.
+2023-05-15 11:40:08.345 INFO [nioEventLoopGroup-2-10][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:40:09.155 INFO [nioEventLoopGroup-2-12][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:40:09.155 INFO [nioEventLoopGroup-2-12][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:41:03.637 INFO [nioEventLoopGroup-2-12][ClientHandler.java:92] - Channel timeout.
+2023-05-15 11:41:03.637 INFO [nioEventLoopGroup-2-12][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:41:06.284 INFO [nioEventLoopGroup-2-13][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:41:06.284 INFO [nioEventLoopGroup-2-13][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:41:13.218 INFO [nioEventLoopGroup-2-13][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:41:13.218 INFO [nioEventLoopGroup-2-13][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:42:12.437 INFO [nioEventLoopGroup-2-1][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:42:12.437 INFO [nioEventLoopGroup-2-1][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:42:33.295 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:42:33.479 INFO [nioEventLoopGroup-2-2][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:42:33.481 INFO [nioEventLoopGroup-2-2][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:42:33.737 INFO [nioEventLoopGroup-2-4][NettyClient.java:80] - Connection to fonts.gstatic.com:443 successfully.
+2023-05-15 11:42:33.813 INFO [nioEventLoopGroup-2-2][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:42:33.814 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.c6a535a95f72a8a22458a1e392a23f44
+2023-05-15 11:42:33.987 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.28d7d67c4aa34b0feecc71c4b6982486
+2023-05-15 11:42:33.990 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.11b89cef75eb28f1eed5f646df8132ea
+2023-05-15 11:42:34.736 INFO [nioEventLoopGroup-2-3][NettyClient.java:80] - Connection to www.gstatic.com:443 successfully.
+2023-05-15 11:42:36.527 INFO [nioEventLoopGroup-2-5][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:42:36.527 INFO [nioEventLoopGroup-2-5][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:42:38.416 INFO [nioEventLoopGroup-2-6][NettyClient.java:119] - Disconnection to www.gstatic.com:80 .
+2023-05-15 11:42:38.416 INFO [nioEventLoopGroup-4-5][AgentHandler.java:270] - User client exit.8f4c4c36f168e1ac73968423f67e7a1b
+2023-05-15 11:42:38.416 INFO [Thread-9][AgentHandler.java:352] - Client closed.8f4c4c36f168e1ac73968423f67e7a1b
+2023-05-15 11:43:18.114 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.2ac5ef904444691e1768b111616b5cf7
+2023-05-15 11:43:18.114 INFO [nioEventLoopGroup-4-6][NettyClient.java:119] - Disconnection to clientservices.googleapis.com:443 .
+2023-05-15 11:43:18.114 INFO [nioEventLoopGroup-2-8][NettyClient.java:119] - Disconnection to clientservices.googleapis.com:443 .
+2023-05-15 11:43:18.114 INFO [Thread-11][AgentHandler.java:352] - Client closed.2ac5ef904444691e1768b111616b5cf7
+2023-05-15 11:43:31.743 INFO [nioEventLoopGroup-2-5][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:43:33.611 INFO [nioEventLoopGroup-2-6][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:43:33.612 INFO [nioEventLoopGroup-2-6][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:43:49.376 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.be27f8b5d6b55fd118e9c80d81bef2c3
+2023-05-15 11:43:49.377 INFO [nioEventLoopGroup-4-11][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:43:49.377 INFO [nioEventLoopGroup-2-3][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:43:49.377 INFO [Thread-16][AgentHandler.java:352] - Client closed.be27f8b5d6b55fd118e9c80d81bef2c3
+2023-05-15 11:43:49.379 INFO [nioEventLoopGroup-4-10][AgentHandler.java:270] - User client exit.a5269a8c2cae4a94b2432521452e6843
+2023-05-15 11:43:49.380 INFO [nioEventLoopGroup-4-10][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:43:49.380 INFO [Thread-15][AgentHandler.java:352] - Client closed.a5269a8c2cae4a94b2432521452e6843
+2023-05-15 11:43:49.380 INFO [nioEventLoopGroup-2-4][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:43:49.401 INFO [nioEventLoopGroup-2-6][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:43:49.444 INFO [nioEventLoopGroup-2-8][NettyClient.java:80] - Connection to www.gstatic.com:443 successfully.
+2023-05-15 11:43:49.458 INFO [nioEventLoopGroup-2-7][NettyClient.java:80] - Connection to fonts.gstatic.com:443 successfully.
+2023-05-15 11:43:49.683 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.0b5631fb5a4118ac6cde2cb9effbecea
+2023-05-15 11:43:49.965 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.d7cb80ee53acbf7ee341cc64e2570eec
+2023-05-15 11:43:51.618 INFO [nioEventLoopGroup-2-9][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:43:51.618 INFO [nioEventLoopGroup-2-9][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:26.186 INFO [nioEventLoopGroup-2-9][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:26.398 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.89d8fb014a89ff2061b9716af1a51c17
+2023-05-15 11:44:26.404 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.b1985d6484e1aea8de6e858a6d7ffa59
+2023-05-15 11:44:26.409 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.20f823593138069a1e256cb7900d97f7
+2023-05-15 11:44:26.419 INFO [nioEventLoopGroup-4-5][AgentHandler.java:270] - User client exit.b07b7bae89c2f8f25da127fac5523077
+2023-05-15 11:44:26.474 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.2ff02a216a1b06f1be81284da68f0d72
+2023-05-15 11:44:26.894 INFO [nioEventLoopGroup-4-7][AgentHandler.java:270] - User client exit.ab8c0ffc5bee00151336de97f95a619d
+2023-05-15 11:44:27.101 INFO [nioEventLoopGroup-4-8][AgentHandler.java:270] - User client exit.3bc53c2ef089759d58ad798f1224463a
+2023-05-15 11:44:27.230 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.9f697d5ddd5914b37679e8da7aa95c58
+2023-05-15 11:44:27.338 INFO [nioEventLoopGroup-4-10][AgentHandler.java:270] - User client exit.62e4dbc0f1c348573fe8433a270e0b1a
+2023-05-15 11:44:27.709 INFO [nioEventLoopGroup-2-10][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:44:27.711 INFO [nioEventLoopGroup-2-10][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:27.745 INFO [http-nio-8787-exec-2][DirectJDKLog.java:180] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-05-15 11:44:27.746 INFO [http-nio-8787-exec-2][FrameworkServlet.java:524] - Initializing Servlet 'dispatcherServlet'
+2023-05-15 11:44:27.765 INFO [http-nio-8787-exec-2][FrameworkServlet.java:546] - Completed initialization in 19 ms
+2023-05-15 11:44:28.629 INFO [nioEventLoopGroup-4-8][AgentHandler.java:270] - User client exit.d3ac3d9d030ee6ec20bbf8dce1c90beb
+2023-05-15 11:44:28.629 INFO [nioEventLoopGroup-4-8][NettyClient.java:119] - Disconnection to cdn.growthbook.io:443 .
+2023-05-15 11:44:28.629 INFO [nioEventLoopGroup-2-11][NettyClient.java:119] - Disconnection to cdn.growthbook.io:443 .
+2023-05-15 11:44:28.630 INFO [Thread-13][AgentHandler.java:352] - Client closed.d3ac3d9d030ee6ec20bbf8dce1c90beb
+2023-05-15 11:44:31.953 INFO [nioEventLoopGroup-2-10][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:32.188 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.7b596c63ce15164911606d1bebfa0729
+2023-05-15 11:44:32.205 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.56d3fecb963439a7e6c0c308d1df96f8
+2023-05-15 11:44:33.712 INFO [nioEventLoopGroup-2-13][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:44:33.712 INFO [nioEventLoopGroup-2-13][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:44.577 INFO [nioEventLoopGroup-2-14][NettyClient.java:80] - Connection to fanyi.baidu.com:443 successfully.
+2023-05-15 11:44:44.742 INFO [nioEventLoopGroup-2-15][NettyClient.java:80] - Connection to fanyi.baidu.com:443 successfully.
+2023-05-15 11:44:45.392 INFO [nioEventLoopGroup-2-1][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:44:45.392 INFO [nioEventLoopGroup-2-16][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:44:46.002 INFO [nioEventLoopGroup-2-2][NettyClient.java:80] - Connection to passport.baidu.com:443 successfully.
+2023-05-15 11:44:46.166 INFO [nioEventLoopGroup-2-3][NettyClient.java:80] - Connection to fanyiapp.cdn.bcebos.com:443 successfully.
+2023-05-15 11:44:46.341 INFO [nioEventLoopGroup-2-4][NettyClient.java:80] - Connection to fanyiapp.cdn.bcebos.com:443 successfully.
+2023-05-15 11:44:46.347 INFO [nioEventLoopGroup-2-5][NettyClient.java:80] - Connection to fanyiapp.cdn.bcebos.com:443 successfully.
+2023-05-15 11:44:46.569 INFO [nioEventLoopGroup-2-6][NettyClient.java:80] - Connection to miao.baidu.com:443 successfully.
+2023-05-15 11:44:46.777 INFO [nioEventLoopGroup-2-7][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:44:46.787 INFO [nioEventLoopGroup-2-8][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:44:46.789 INFO [nioEventLoopGroup-2-9][NettyClient.java:80] - Connection to fanyi.baidu.com:443 successfully.
+2023-05-15 11:44:47.253 INFO [nioEventLoopGroup-2-10][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:44:48.256 INFO [nioEventLoopGroup-2-13][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:48.300 INFO [nioEventLoopGroup-2-11][NettyClient.java:80] - Connection to fanyi-cdn.cdn.bcebos.com:443 successfully.
+2023-05-15 11:44:48.466 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.be36f141eff2d291a6518c85f57b726f
+2023-05-15 11:44:48.672 INFO [nioEventLoopGroup-2-12][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:44:48.674 INFO [nioEventLoopGroup-2-12][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:48.941 INFO [nioEventLoopGroup-2-12][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:49.117 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.7e9e685b9d92b7cdf7383d8fb2e814c3
+2023-05-15 11:44:49.334 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.2ca7358dbb69ec043e95d00e29b2ca1e
+2023-05-15 11:44:49.337 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.df5e84a81f1233f9660959d9bbf3f2c0
+2023-05-15 11:44:49.656 INFO [nioEventLoopGroup-2-13][NettyClient.java:80] - Connection to fanyi-app.baidu.com:443 successfully.
+2023-05-15 11:44:50.012 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.ef0c6dda4111693ef264cb9ab6c4424c
+2023-05-15 11:44:50.068 INFO [nioEventLoopGroup-4-5][AgentHandler.java:270] - User client exit.a834b37e5cf5bb1637a053ca05ecf836
+2023-05-15 11:44:50.724 INFO [nioEventLoopGroup-2-11][NettyClient.java:85] - Connection to content-autofill.googleapis.com:443 failed.
+2023-05-15 11:44:50.726 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.e827f906e10502f4dc1e0ba3f5ee39ad
+2023-05-15 11:44:50.739 INFO [nioEventLoopGroup-2-14][NettyClient.java:80] - Connection to miao.baidu.com:443 successfully.
+2023-05-15 11:44:50.914 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.b81de0ecb0a2b172371523c15f7fbdd9
+2023-05-15 11:44:51.148 INFO [nioEventLoopGroup-2-12][NettyClient.java:85] - Connection to content-autofill.googleapis.com:443 failed.
+2023-05-15 11:44:51.337 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.169e5f323a6758c816ca6567e02ea936
+2023-05-15 11:44:51.353 INFO [nioEventLoopGroup-2-15][NettyClient.java:80] - Connection to fanyiapp.cdn.bcebos.com:443 successfully.
+2023-05-15 11:44:51.695 INFO [nioEventLoopGroup-2-16][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:44:51.696 INFO [nioEventLoopGroup-2-16][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:53.165 INFO [nioEventLoopGroup-2-16][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:53.370 INFO [nioEventLoopGroup-4-7][AgentHandler.java:270] - User client exit.be7ec188b14ee2002752f53ee455d4ff
+2023-05-15 11:44:53.597 INFO [nioEventLoopGroup-4-8][AgentHandler.java:270] - User client exit.07329a685dbe21fdd6f30efe9f78be9a
+2023-05-15 11:44:54.694 INFO [nioEventLoopGroup-2-1][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:44:54.695 INFO [nioEventLoopGroup-2-1][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:44:57.292 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.a83100a0835e7b6d517a0705827faac2
+2023-05-15 11:44:57.293 INFO [nioEventLoopGroup-4-15][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:44:57.293 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.ae3c9d8b7ab92349fccf983009fda7b6
+2023-05-15 11:44:57.293 INFO [nioEventLoopGroup-4-16][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:44:57.293 INFO [Thread-18][AgentHandler.java:352] - Client closed.a83100a0835e7b6d517a0705827faac2
+2023-05-15 11:44:57.294 INFO [nioEventLoopGroup-2-7][NettyClient.java:119] - Disconnection to fonts.gstatic.com:443 .
+2023-05-15 11:44:57.296 INFO [nioEventLoopGroup-2-8][NettyClient.java:119] - Disconnection to www.gstatic.com:443 .
+2023-05-15 11:44:57.296 INFO [Thread-19][AgentHandler.java:352] - Client closed.ae3c9d8b7ab92349fccf983009fda7b6
+2023-05-15 11:44:57.836 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.3d75cde0de84a932f09db042dfc5a6eb
+2023-05-15 11:44:57.836 INFO [nioEventLoopGroup-2-1][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:44:57.837 INFO [Thread-24][AgentHandler.java:352] - Client closed.3d75cde0de84a932f09db042dfc5a6eb
+2023-05-15 11:44:58.080 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:44:58.302 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.b6e0b0eec83f2342fbb9e1226b7d9691
+2023-05-15 11:44:58.307 INFO [nioEventLoopGroup-4-10][AgentHandler.java:270] - User client exit.c1c583bac67b7934a7555a7be230db06
+2023-05-15 11:44:58.566 INFO [nioEventLoopGroup-2-2][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:45:00.711 INFO [nioEventLoopGroup-2-3][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:00.711 INFO [nioEventLoopGroup-2-3][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:03.174 INFO [nioEventLoopGroup-2-3][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:03.424 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.2ed9fa69f7272d6b7ed90124a90bac04
+2023-05-15 11:45:03.424 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.45b95ab01ccffea2bd3690adc0b44027
+2023-05-15 11:45:03.721 INFO [nioEventLoopGroup-2-4][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:03.721 INFO [nioEventLoopGroup-2-4][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:11.406 INFO [nioEventLoopGroup-2-10][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:45:11.406 INFO [nioEventLoopGroup-2-7][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:45:11.406 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.56006550409eb68337540702a43c9b2f
+2023-05-15 11:45:11.406 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.78ad8afe01a4729918fc7e94066afd19
+2023-05-15 11:45:11.406 INFO [Thread-36][AgentHandler.java:352] - Client closed.56006550409eb68337540702a43c9b2f
+2023-05-15 11:45:11.406 INFO [Thread-29][AgentHandler.java:352] - Client closed.78ad8afe01a4729918fc7e94066afd19
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-2-16][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-2-8][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.df104655396f5adffe9cef09b430b324
+2023-05-15 11:45:11.421 INFO [Thread-25][AgentHandler.java:352] - Client closed.df104655396f5adffe9cef09b430b324
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.8776349333d517c9da755bfc9681c792
+2023-05-15 11:45:11.421 INFO [Thread-33][AgentHandler.java:352] - Client closed.8776349333d517c9da755bfc9681c792
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-2-2][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:45:11.421 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.ec218d839246fb62805a38112326e366
+2023-05-15 11:45:11.421 INFO [Thread-44][AgentHandler.java:352] - Client closed.ec218d839246fb62805a38112326e366
+2023-05-15 11:45:14.460 INFO [nioEventLoopGroup-2-4][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:14.652 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.4db684c23c7e61e5d114abdca28ff8f1
+2023-05-15 11:45:14.652 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.c0d96e9141b5741abda1bafd12430d13
+2023-05-15 11:45:15.766 INFO [nioEventLoopGroup-2-5][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:15.767 INFO [nioEventLoopGroup-2-5][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:23.759 INFO [nioEventLoopGroup-2-5][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:23.981 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.984754e6ff70ab736d1ff0caed13a039
+2023-05-15 11:45:23.998 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.d0e98b4272631e8bd6855a41dad0ea10
+2023-05-15 11:45:24.748 INFO [nioEventLoopGroup-2-6][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:24.749 INFO [nioEventLoopGroup-2-6][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:26.240 INFO [nioEventLoopGroup-2-6][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:26.446 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.b2658a6315bec8af0a0efc4a1d0dd180
+2023-05-15 11:45:26.446 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.5418287b03d82288995602935fad831d
+2023-05-15 11:45:27.786 INFO [nioEventLoopGroup-2-7][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:27.786 INFO [nioEventLoopGroup-2-7][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:31.399 INFO [nioEventLoopGroup-2-7][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:31.647 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.e185f29f02f00c7f60c2a810003ded11
+2023-05-15 11:45:31.647 INFO [nioEventLoopGroup-4-5][AgentHandler.java:270] - User client exit.33949c799324e66d1d0be2bc7f282ad1
+2023-05-15 11:45:33.093 INFO [nioEventLoopGroup-2-13][NettyClient.java:119] - Disconnection to fanyi-app.baidu.com:443 .
+2023-05-15 11:45:33.093 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.f998a15c378cae94207bb5ae7d7b3bd2
+2023-05-15 11:45:33.093 INFO [Thread-39][AgentHandler.java:352] - Client closed.f998a15c378cae94207bb5ae7d7b3bd2
+2023-05-15 11:45:33.157 INFO [nioEventLoopGroup-2-14][NettyClient.java:119] - Disconnection to fanyi.baidu.com:443 .
+2023-05-15 11:45:33.157 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.ee78ae46ae3fc0898e5bd42df3d4f88a
+2023-05-15 11:45:33.157 INFO [Thread-23][AgentHandler.java:352] - Client closed.ee78ae46ae3fc0898e5bd42df3d4f88a
+2023-05-15 11:45:33.267 INFO [nioEventLoopGroup-2-6][NettyClient.java:119] - Disconnection to miao.baidu.com:443 .
+2023-05-15 11:45:33.267 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.9e1e3235cb27124640eea0d037fe8571
+2023-05-15 11:45:33.267 INFO [Thread-30][AgentHandler.java:352] - Client closed.9e1e3235cb27124640eea0d037fe8571
+2023-05-15 11:45:33.534 INFO [nioEventLoopGroup-2-15][NettyClient.java:119] - Disconnection to fanyi.baidu.com:443 .
+2023-05-15 11:45:33.534 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.b3ff30a0c2e064805ae507103de1cb6e
+2023-05-15 11:45:33.534 INFO [Thread-22][AgentHandler.java:352] - Client closed.b3ff30a0c2e064805ae507103de1cb6e
+2023-05-15 11:45:33.785 INFO [nioEventLoopGroup-2-8][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:33.800 INFO [nioEventLoopGroup-2-8][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:36.727 INFO [nioEventLoopGroup-2-8][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:36.727 INFO [nioEventLoopGroup-2-14][NettyClient.java:119] - Disconnection to miao.baidu.com:443 .
+2023-05-15 11:45:36.727 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.167c059b035213fba559d2f420cc06bd
+2023-05-15 11:45:36.727 INFO [Thread-40][AgentHandler.java:352] - Client closed.167c059b035213fba559d2f420cc06bd
+2023-05-15 11:45:36.932 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.0d496ec4cb248860b6000318f52625d0
+2023-05-15 11:45:36.948 INFO [nioEventLoopGroup-4-7][AgentHandler.java:270] - User client exit.692f5124d74ce9cb0aeeccf00d9c01c7
+2023-05-15 11:45:36.948 INFO [nioEventLoopGroup-4-8][AgentHandler.java:270] - User client exit.821c15a3ae794e271e86dfe4fce4fe33
+2023-05-15 11:45:39.795 INFO [nioEventLoopGroup-2-9][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:39.796 INFO [nioEventLoopGroup-2-9][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:47.943 INFO [nioEventLoopGroup-2-9][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:48.158 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.871c46c4ac8d54f107b20e05d0b417d3
+2023-05-15 11:45:48.158 INFO [nioEventLoopGroup-4-10][AgentHandler.java:270] - User client exit.42debce81dd6f13b266ec313030ff77d
+2023-05-15 11:45:48.818 INFO [nioEventLoopGroup-2-10][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:48.833 INFO [nioEventLoopGroup-2-10][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:51.714 INFO [nioEventLoopGroup-2-2][NettyClient.java:119] - Disconnection to passport.baidu.com:443 .
+2023-05-15 11:45:51.714 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.3be10671aa45056c15d1524c0aa96da3
+2023-05-15 11:45:51.714 INFO [Thread-26][AgentHandler.java:352] - Client closed.3be10671aa45056c15d1524c0aa96da3
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.719bdf0fc794b9f625ea79861095e709
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.619f38e417c3077db84c83fc959f543f
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-4-1][NettyClient.java:119] - Disconnection to fanyi-cdn.cdn.bcebos.com:443 .
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-4-12][NettyClient.java:119] - Disconnection to fanyiapp.cdn.bcebos.com:443 .
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-2-11][NettyClient.java:119] - Disconnection to fanyi-cdn.cdn.bcebos.com:443 .
+2023-05-15 11:45:57.206 INFO [Thread-35][AgentHandler.java:352] - Client closed.719bdf0fc794b9f625ea79861095e709
+2023-05-15 11:45:57.206 INFO [Thread-41][AgentHandler.java:352] - Client closed.619f38e417c3077db84c83fc959f543f
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-2-15][NettyClient.java:119] - Disconnection to fanyiapp.cdn.bcebos.com:443 .
+2023-05-15 11:45:57.206 INFO [nioEventLoopGroup-2-10][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:57.413 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.7bc82816b3c7ec106ef69395d9d8fdae
+2023-05-15 11:45:57.415 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.7cf79d974ea2d29717ebd80fac09305f
+2023-05-15 11:45:57.820 INFO [nioEventLoopGroup-2-11][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:45:57.835 INFO [nioEventLoopGroup-2-11][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:45:59.607 INFO [nioEventLoopGroup-2-11][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:45:59.893 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.45c1e906d17abcfaea9c93e8b418cfd1
+2023-05-15 11:45:59.909 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.76b59e24d003a2607772fd4d2e89a254
+2023-05-15 11:46:00.853 INFO [nioEventLoopGroup-2-12][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:46:00.869 INFO [nioEventLoopGroup-2-12][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:46:04.667 INFO [nioEventLoopGroup-2-12][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:46:05.027 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.fe6899fc78be2bd0ee53560f4cffd38c
+2023-05-15 11:46:05.027 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.d11377914e5e81550ebaf66cc3484d29
+2023-05-15 11:46:06.854 INFO [nioEventLoopGroup-2-13][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:46:06.854 INFO [nioEventLoopGroup-2-13][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:46:09.769 INFO [nioEventLoopGroup-2-13][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:46:10.025 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.e48e6f91231cc8769b35119f87a04a89
+2023-05-15 11:46:10.025 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.e31a1f7e095695a48178742350895293
+2023-05-15 11:46:12.875 INFO [nioEventLoopGroup-2-14][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:46:12.875 INFO [nioEventLoopGroup-2-14][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:46:20.926 INFO [nioEventLoopGroup-2-14][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:46:21.149 INFO [nioEventLoopGroup-4-3][AgentHandler.java:270] - User client exit.863fc6b93d2a5a9a9d6035ef0468230f
+2023-05-15 11:46:21.149 INFO [nioEventLoopGroup-4-4][AgentHandler.java:270] - User client exit.e834cc226d6cabec3504fcf01c97573e
+2023-05-15 11:46:21.890 INFO [nioEventLoopGroup-2-15][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:46:21.890 INFO [nioEventLoopGroup-2-15][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:02.103 INFO [main][StartupInfoLogger.java:50] - Starting Application on lucky-PC with PID 4748 (D:\dev\agent_dev\network-agent\target\classes started by Administrator in D:\dev\agent_dev\network-agent)
+2023-05-15 11:47:02.141 INFO [main][SpringApplication.java:675] - No active profile set, falling back to default profiles: default
+2023-05-15 11:47:04.528 INFO [main][TomcatWebServer.java:90] - Tomcat initialized with port(s): 8787 (http)
+2023-05-15 11:47:04.552 INFO [main][DirectJDKLog.java:180] - Initializing ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:47:04.564 INFO [main][DirectJDKLog.java:180] - Starting service [Tomcat]
+2023-05-15 11:47:04.565 INFO [main][DirectJDKLog.java:180] - Starting Servlet Engine: Apache Tomcat/8.5.32
+2023-05-15 11:47:04.810 INFO [localhost-startStop-1][DirectJDKLog.java:180] - Initializing Spring embedded WebApplicationContext
+2023-05-15 11:47:04.810 INFO [localhost-startStop-1][ServletWebServerApplicationContext.java:296] - Root WebApplicationContext: initialization completed in 2622 ms
+2023-05-15 11:47:05.606 INFO [main][WelcomePageHandlerMapping.java:56] - Adding welcome page: class path resource [public/index.html]
+2023-05-15 11:47:05.782 INFO [main][DirectJDKLog.java:180] - Starting ProtocolHandler ["http-nio-8787"]
+2023-05-15 11:47:05.782 INFO [main][DirectJDKLog.java:180] - Using a shared selector for servlet write/read
+2023-05-15 11:47:05.797 INFO [main][TomcatWebServer.java:204] - Tomcat started on port(s): 8787 (http) with context path ''
+2023-05-15 11:47:05.813 INFO [main][StartupInfoLogger.java:59] - Started Application in 4.124 seconds (JVM running for 4.575)
+2023-05-15 11:47:06.337 INFO [nioEventLoopGroup-3-1][AgentServer.java:85] - Agent server startup successfully, port 50000......
+2023-05-15 11:47:06.922 INFO [nioEventLoopGroup-2-1][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:47:06.990 INFO [nioEventLoopGroup-2-1][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:17.695 INFO [nioEventLoopGroup-2-1][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:47:17.718 INFO [nioEventLoopGroup-2-3][NettyClient.java:80] - Connection to passport.baidu.com:443 successfully.
+2023-05-15 11:47:17.718 INFO [nioEventLoopGroup-2-2][NettyClient.java:80] - Connection to fanyi-cdn.cdn.bcebos.com:443 successfully.
+2023-05-15 11:47:17.954 INFO [nioEventLoopGroup-4-1][AgentHandler.java:270] - User client exit.7b0f8ffa0e56e9854a12a19ec32beffc
+2023-05-15 11:47:17.960 INFO [nioEventLoopGroup-4-5][AgentHandler.java:270] - User client exit.1e0723b64558c7268444ce3d86bd8275
+2023-05-15 11:47:17.983 INFO [nioEventLoopGroup-4-2][AgentHandler.java:270] - User client exit.9a43a4918cf770f33761617e76662aa0
+2023-05-15 11:47:17.995 INFO [nioEventLoopGroup-4-6][AgentHandler.java:270] - User client exit.9c9765dfe94db9c9658360e093bf44ae
+2023-05-15 11:47:18.285 INFO [nioEventLoopGroup-2-4][NettyClient.java:80] - Connection to hm.baidu.com:443 successfully.
+2023-05-15 11:47:18.517 INFO [nioEventLoopGroup-2-5][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:47:18.548 INFO [nioEventLoopGroup-2-5][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:19.022 INFO [nioEventLoopGroup-2-5][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:47:19.219 INFO [nioEventLoopGroup-4-8][AgentHandler.java:270] - User client exit.b7d0b448ace922e23d258ee3abdd2892
+2023-05-15 11:47:19.222 INFO [nioEventLoopGroup-4-10][AgentHandler.java:270] - User client exit.ebf16f8835ec340874d462f08f8e1ed6
+2023-05-15 11:47:19.250 INFO [nioEventLoopGroup-4-9][AgentHandler.java:270] - User client exit.43ce9a6d8a5933ad06bef30e2d9c9d71
+2023-05-15 11:47:21.525 INFO [nioEventLoopGroup-2-6][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:47:21.525 INFO [nioEventLoopGroup-2-6][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:28.750 INFO [nioEventLoopGroup-2-4][NettyClient.java:119] - Disconnection to hm.baidu.com:443 .
+2023-05-15 11:47:28.751 INFO [nioEventLoopGroup-4-7][AgentHandler.java:270] - User client exit.1ff148e6a7a58fb7cd12757729fcdaa6
+2023-05-15 11:47:28.751 INFO [Thread-9][AgentHandler.java:352] - Client closed.1ff148e6a7a58fb7cd12757729fcdaa6
+2023-05-15 11:47:30.139 INFO [nioEventLoopGroup-2-6][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:47:30.347 INFO [nioEventLoopGroup-4-12][AgentHandler.java:270] - User client exit.cf6676e079137743967aee9b3359db95
+2023-05-15 11:47:30.353 INFO [nioEventLoopGroup-4-13][AgentHandler.java:270] - User client exit.dd63edc2118a5b7a3f51161adfa2f44f
+2023-05-15 11:47:30.543 INFO [nioEventLoopGroup-2-7][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:47:30.545 INFO [nioEventLoopGroup-2-7][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:30.817 INFO [nioEventLoopGroup-2-7][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:47:30.817 INFO [nioEventLoopGroup-4-11][AgentHandler.java:270] - User client exit.49599b60edd325ab775c3f2dd6aa72d5
+2023-05-15 11:47:30.821 INFO [nioEventLoopGroup-4-14][AgentHandler.java:270] - User client exit.7894c9c47862a64d792733d1b74bf388
+2023-05-15 11:47:31.728 INFO [nioEventLoopGroup-4-16][AgentHandler.java:270] - User client exit.a14ba5f0067c7bed298b70a8972def4a
+2023-05-15 11:47:31.729 INFO [nioEventLoopGroup-4-15][AgentHandler.java:270] - User client exit.672d494787d64e6ab4dd9897053c09ec
+2023-05-15 11:47:33.555 INFO [nioEventLoopGroup-2-8][StartupRunnable.java:93] - Connection to localhost:36500 success...
+2023-05-15 11:47:33.555 INFO [nioEventLoopGroup-2-8][ClientHandler.java:34] - Connection to server successfully.
+2023-05-15 11:47:57.996 INFO [nioEventLoopGroup-2-8][ClientHandler.java:42] - Connection closed.
+2023-05-15 11:47:57.996 INFO [nioEventLoopGroup-2-8][ClientHandler.java:42] - Connection closed.

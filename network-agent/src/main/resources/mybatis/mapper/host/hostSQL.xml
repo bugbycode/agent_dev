@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bugbycode.mapper.host.HostMapper">
+	<resultMap type="host" id="hostResult">
+		<result property="id" 			column="id"/>
+		<result property="host" 		column="host"/>
+		<result property="forward" 		column="forward"/>
+		<result property="result" 		column="result"/>
+		<result property="connTime" 	column="datetime"/>
+	</resultMap>
+	
+	<select id="query" resultMap="hostResult">
+		<![CDATA[
+			SELECT * FROM host 
+		]]>
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<![CDATA[
+					(host LIKE #{keyword})
+				]]>
+			</if>
+		</where>
+		<![CDATA[
+			ORDER BY `datetime` DESC
+		]]>
+		<if test="limit != '' and limit != null">
+			<![CDATA[
+				LIMIT #{offset},#{limit}
+			]]>
+		</if>
+	</select>
+	
+	<select id="count" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM host 
+		]]>
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<![CDATA[
+					(host LIKE #{keyword})
+				]]>
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByHost" parameterType="java.lang.String" resultMap="hostResult">
+		<![CDATA[
+			SELECT * FROM host WHERE host = #{value} LIMIT 1
+		]]>
+	</select>
+	
+	<insert id="insert" parameterType="host">
+		<![CDATA[
+			INSERT INTO host (
+				host,
+				forward,
+				result,
+				datetime
+			) VALUES(
+				#{host},
+				#{forward},
+				#{result},
+				#{connTime}
+			)
+		]]>
+	</insert>
+	
+	<update id="updateForwardById" >
+		<![CDATA[
+			UPDATE host SET forward = #{forward} WHERE id = #{id}
+		]]>
+	</update>
+	
+	<update id="updateResultDatetimeByHost" >
+		<![CDATA[
+			UPDATE host SET result = #{result}, datetime = #{datetime} WHERE host = #{host}
+		]]>
+	</update>
+</mapper>
