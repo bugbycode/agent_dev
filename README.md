@@ -5,7 +5,7 @@
 
 1、创建数字证书颁发机构 CAManager.p12
 ```
-keytool -genkeypair -keystore CAManager.p12 -dname "CN=证书颁发中心, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias CAManager -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 3650
+keytool -genkeypair -keystore CAManager.p12 -dname "CN=证书颁发中心,C=CN" -keypass "china@" -storepass "china@" -alias CAManager -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 3650
 ```
 2、导出颁发机构根证书 CAManager.cer
 ```
@@ -14,7 +14,7 @@ keytool -exportcert -alias CAManager -keystore CAManager.p12 -file CAManager.cer
 
 3、创建服务端使用的秘钥库 server.p12
 ```
-keytool -genkeypair -keystore server.p12 -dname "CN=43.163.235.126, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias server -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
+keytool -genkeypair -keystore server.p12 -dname "CN=example.com,C=CN" -keypass "china@" -storepass "china@" -alias server -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
 ```
 4、创建服务端证书请求 server.csr
 ```
@@ -29,12 +29,12 @@ keytool -gencert -alias CAManager -keystore CAManager.p12 -infile server.csr -ou
 keytool -importcert -alias CAManager -file CAManager.cer -keystore server.p12 -keypass "china@" -storepass "china@" -storetype "PKCS12"
 ```
 7、将第5步骤得到的server.cer导入到第3步骤得到的server.p12中
+```
 keytool -importcert -alias server -keystore server.p12 -storetype "PKCS12" -keypass "china@" -storepass "china@" -file server.cer
 ```
-
 8、创建客户端使用的秘钥库 client.p12
 ```
-keytool -genkeypair -keystore client.p12 -dname "CN=client, OU=信息安全事业部, O=信息安全事业部, L=北京市, ST=北京,C=CN" -keypass "china@" -storepass "china@" -alias client -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
+keytool -genkeypair -keystore client.p12 -dname "CN=client,C=CN" -keypass "china@" -storepass "china@" -alias client -keyalg RSA -keysize 4096 -sigalg SHA256withRSA -storetype "PKCS12" -validity 1000
 ```
 9、创建客户端证书请求 client.csr
 ```
