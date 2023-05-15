@@ -41,7 +41,7 @@ keytool -genkeypair -keystore client.p12 -dname "CN=client,C=CN" -keypass "china
 ```
 keytool -certreq -alias client -keystore client.p12 -file client.csr -keypass "china@" -storepass "china@"
 ```
-10、使用证书请求文件 client.csr 到证书颁发机构 CAManager.p12 申请服务端使用的证书 client.cer
+10、使用证书请求文件 client.csr 到证书颁发机构 CAManager.p12 申请客户端使用的证书 client.cer
 ```
 keytool -gencert -alias CAManager -keystore CAManager.p12 -infile client.csr -outfile client.cer -keypass "china@" -storepass "china@" -validity 1000
 ```
