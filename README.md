@@ -64,7 +64,7 @@ spring:
 #  main:
 #    web-application-type: NONE
   keystore:
-    path: client.p12
+    path: config/client.p12
     password: china@
   server:
     datasource:
@@ -87,7 +87,7 @@ spring:
   main:
     web-application-type: NONE
   keystore:
-    path: server.p12
+    path: config/server.p12
     password: china@
   netty:
     port: 36500 #代理端口
