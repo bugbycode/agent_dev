@@ -97,7 +97,7 @@ loggin:
   config: classpath:log4j2.xml
 ```
 ## 部署方式
-在境外服务器上部署network-server 在自己电脑上部署network-agent
+在公网服务器上部署network-server 在自己电脑上部署network-agent
 
 ## 使用方式
 以Windows为例可以通过以下方式设置代理服务器：
