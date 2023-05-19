@@ -116,6 +116,6 @@ public class NettyClient {
 		
 		nettyClientMap.remove(token);
 		
-		logger.info("Disconnection to " + host + ":" + port + " .");
+		logger.info("Disconnection to " + host + ":" + port + ".");
 	}
 }

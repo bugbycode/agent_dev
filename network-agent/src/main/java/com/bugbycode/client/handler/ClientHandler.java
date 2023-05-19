@@ -37,7 +37,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		Message message = new Message(token, MessageCode.TRANSFER_DATA, data);
 		AgentHandler handler = agentHandlerMap.get(token);
 		if(handler == null) {
-			throw new RuntimeException("User client exit.");
+			throw new RuntimeException("Connetion closed.");
 		}
 		handler.sendMessage(message);
 	}
