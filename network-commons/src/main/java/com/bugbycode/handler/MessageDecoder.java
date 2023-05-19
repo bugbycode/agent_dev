@@ -33,11 +33,11 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 			in = (ByteBuf) super.decode(ctx,in);
 			
 			if(in == null){
-				throw new RuntimeException("Transfer data error.");
+				return null;
 	        }
 			
 			if(in.readableBytes() < HEADER_SIZE){
-				throw new RuntimeException("Transfer data error.");
+				return null;
 	        }
 			
 			//读取消息类型总共1字节
@@ -48,7 +48,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 			int length = in.readInt();
 			
 			if(in.readableBytes() != length) {
-				throw new RuntimeException("Transfer data error.");
+				return null;
 			}
 			
 			if(type != MessageCode.HEARTBEAT) {
