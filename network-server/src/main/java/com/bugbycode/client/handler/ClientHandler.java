@@ -44,18 +44,12 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception{
-		//super.channelInactive(ctx);
 		ctx.close();
 		client.close(true);
 		synchronized (nettyClientMap) {
 			nettyClientMap.remove(token);
 		}
 	}
-	/*
-	@Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        //super.channelActive(ctx);
-    }*/
 	
 	@Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception{

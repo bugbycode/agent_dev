@@ -113,6 +113,6 @@ public class NettyClient {
 			clientChannel.close();
 		}
 		
-		logger.info("Disconnection to " + host + ":" + port + " .");
+		logger.info("Disconnection to " + host + ":" + port + ".");
 	}
 }
