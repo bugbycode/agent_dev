@@ -1,10 +1,10 @@
 package com.bugbycode.proxy.handler;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,28 +32,33 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	private NioEventLoopGroup remoteGroup;
 	
 	public ServerHandler(NioEventLoopGroup remoteGroup) {
-		this.nettyClientMap = Collections.synchronizedMap(new HashMap<String,NettyClient>());
+		this.nettyClientMap = new Hashtable<String,NettyClient>();
 		this.remoteGroup = remoteGroup;
 	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		logger.info("Agent connection...");
+		logger.info("Agent connection.");
 	}
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		ctx.close();
-		logger.info("Agent connection closed... ");
-		Set<String> keySet = nettyClientMap.keySet();
-		synchronized(nettyClientMap) {
-			Iterator<String> it = keySet.iterator();
-			while(it.hasNext()) {
-				String key = it.next();
-				nettyClientMap.get(key).close(false);
+		logger.info("Agent connection closed.");
+		List<NettyClient> list = new ArrayList<NettyClient>();
+		for(Entry<String, NettyClient> entry : nettyClientMap.entrySet()) {
+			NettyClient client = entry.getValue();
+			if(client != null) {
+				list.add(client);
 			}
-			nettyClientMap.clear();
+		};
+		for(NettyClient client : list) {
+			client.close(false);
 		}
+		
+		nettyClientMap.clear();
+		
+		logger.info("Close a total of " + list.size() + " connections.");
 	}
 	
 	@Override
@@ -84,28 +89,24 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		}
 		
 		if(type == MessageCode.CLOSE_CONNECTION) {
-			synchronized (nettyClientMap) {
-				NettyClient client = nettyClientMap.get(token);
-				if(client != null) {
-					client.close(false);
-				}
+			NettyClient client = nettyClientMap.get(token);
+			if(client != null) {
+				client.close(false);
 			}
 			return;
 		}
 		
 		if(type == MessageCode.TRANSFER_DATA) {
-			synchronized (nettyClientMap) {
-				NettyClient client = nettyClientMap.get(token);
-				if(client == null) {
-					message.setToken(token);
-					message.setType(MessageCode.CLOSE_CONNECTION);
-					message.setData(null);
-					channel.writeAndFlush(message);
-					return;
-				}
-				byte[] buffer = (byte[]) data;
-				client.writeAndFlush(buffer);
+			NettyClient client = nettyClientMap.get(token);
+			if(client == null) {
+				message.setToken(token);
+				message.setType(MessageCode.CLOSE_CONNECTION);
+				message.setData(null);
+				channel.writeAndFlush(message);
+				return;
 			}
+			byte[] buffer = (byte[]) data;
+			client.writeAndFlush(buffer);
 		}
 	}
 	
