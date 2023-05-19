@@ -2,6 +2,17 @@
 
 这是一个使用netty实现网络代理的简单实例，本项目仅供学习研究使用。此项目经多次重构修复许多bug，当前版本启用了双向认证，并且使用RSA加密代理通道，需要使用者自己签发证书。
 
+# 项目编译
+
+```
+git clone https://github.com/bugbycode/agent_dev.git
+
+cd agent_dev
+
+mvn package
+
+```
+
 ## 自签发数字证书
 
 1、创建数字证书颁发机构 CAManager.p12
