@@ -2,8 +2,6 @@ package com.bugbycode.module;
 
 import java.io.Serializable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class ConnectionInfo implements Serializable{
 
@@ -49,17 +47,5 @@ public class ConnectionInfo implements Serializable{
 
 	public void setPort(int port) {
 		this.port = port;
-	}
-	
-	@Override
-	public String toString() {
-		JSONObject json = new JSONObject();
-		try {
-			json.put("port", port);
-			json.put("host", host);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return json.toString();
 	}
 }

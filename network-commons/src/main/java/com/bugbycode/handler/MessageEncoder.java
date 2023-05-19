@@ -4,7 +4,6 @@ import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageCode;
 import com.util.StringUtil;
-import com.bugbycode.module.Authentication;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,14 +29,21 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 		//计算长度
 		Object obj = msg.getData();
 		byte[] body;
-		if(type == MessageCode.AUTH) {
-			Authentication auth = (Authentication) obj;
-			String authInfo = auth.toString();
-			body = authInfo.getBytes();
-		}else if(type == MessageCode.CONNECTION) {
+		if(type == MessageCode.CONNECTION) {
+			
 			ConnectionInfo conn = (ConnectionInfo) obj;
-			String connInfo = conn.toString();
-			body = connInfo.getBytes();
+			
+			byte[] host_buf = conn.getHost().getBytes();
+			int port = conn.getPort() & 0XFFFF; // 0~65535
+			
+			body = new byte[host_buf.length + 2];
+			
+			body[0] = (byte)((port >> 0x08) & 0xFF);
+			body[1] = (byte)(port & 0xFF);
+			
+			System.arraycopy(host_buf, 0, body, 2, host_buf.length);
+			
+			
 		}else if(type == MessageCode.TRANSFER_DATA) {
 			body = (byte[]) obj;
 		}else {

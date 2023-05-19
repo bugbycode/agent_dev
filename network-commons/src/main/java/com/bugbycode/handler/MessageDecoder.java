@@ -1,10 +1,7 @@
 package com.bugbycode.handler;
 
 
-import org.json.JSONObject;
-
 import com.bugbycode.config.HandlerConst;
-import com.bugbycode.module.Authentication;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageCode;
@@ -68,18 +65,14 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 			message.setType(type);
 			
 			//以下是消息内容
-			if(type == MessageCode.AUTH) {
-				String authInfo = new String(data);
-				JSONObject json = new JSONObject(authInfo);
-				Authentication auth = new Authentication(json.getString("username"), json.getString("password"));
-				message.setData(auth);
-			}else if(type == MessageCode.CONNECTION) {
-				String connInfo = new String(data);
+			if(type == MessageCode.CONNECTION) {
 				
-				JSONObject json = new JSONObject(connInfo);
+				int port = ((data[0] << 0x08) & 0xFFFF) | (data[1] & 0xFF);
 				
-				ConnectionInfo conn = new ConnectionInfo(json.getString("host"), json.getInt("port"));
-				message.setData(conn);
+				String host = new String(data, 0x2, length - 0x2);
+				
+				message.setData(new ConnectionInfo(host,port));
+				
 			}else if(type == MessageCode.TRANSFER_DATA) {
 				message.setData(data);
 			}

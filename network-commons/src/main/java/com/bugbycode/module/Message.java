@@ -2,9 +2,6 @@ package com.bugbycode.module;
 
 import java.io.Serializable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class Message implements Serializable {
 
 	/**
@@ -52,16 +49,4 @@ public class Message implements Serializable {
 		this.data = data;
 	}
 	
-	@Override
-	public String toString() {
-		JSONObject json = new JSONObject();
-		try {
-			json.put("type", type);
-			json.put("data", data);
-			json.put("token", token);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return json.toString();
-	}
 }
