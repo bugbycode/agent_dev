@@ -13,7 +13,6 @@ import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageCode;
-import com.util.StringUtil;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -39,7 +38,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		//super.channelActive(ctx);
 		logger.info("Agent connection...");
 	}
 	
@@ -69,7 +67,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		
 		if(type == MessageCode.HEARTBEAT) {
 			//
-			//System.out.println(message);
 			return;
 		}
 		
@@ -118,7 +115,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			IdleStateEvent event = (IdleStateEvent) evt;
 			if (event.state() == IdleState.READER_IDLE) {
 				loss_connect_time++;
-				//logger.info("Read heartbeat timeout.");
 				if (loss_connect_time > 3) {
 					logger.info("Channel timeout.");
 					ctx.channel().close();
@@ -133,13 +129,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		//super.exceptionCaught(ctx, cause);
 		ctx.close();
-		cause.printStackTrace();
-		String error = cause.getMessage();
-		if(StringUtil.isBlank(error)) {
-			cause.printStackTrace();
-		}
-		logger.error(error);
+		logger.error(cause.getLocalizedMessage());
 	}
 }
