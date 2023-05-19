@@ -25,6 +25,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
+	
+	private final byte[] HTTP_PROXY_RESPONSE = "HTTP/1.1 200 Connection Established\r\n\r\n".getBytes(); 
 
 	private final Logger logger = LogManager.getLogger(AgentHandler.class);
 	
@@ -222,15 +224,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			message.setType(MessageCode.TRANSFER_DATA);
 			message.setToken(token);
 			
-			if(protocol == Protocol.HTTPS) {
-				String response = "HTTP/1.1 200 Connection Established\r\n\r\n";
-				byte[] res = response.getBytes();
-				message.setData(res);
-				sendMessage(message);
-			}else if(protocol == Protocol.FTP){
-				String response = "HTTP/1.1 200 Connection Established\r\n\r\n";
-				byte[] res = response.getBytes();
-				message.setData(res);
+			if(protocol == Protocol.HTTPS || protocol == Protocol.FTP) {
+				message.setData(HTTP_PROXY_RESPONSE);
 				sendMessage(message);
 			}else{
 				if(isForward) {
@@ -267,7 +262,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		ctx.close();
 		//关闭连接
-		logger.info("User client exit." + token);
+		logger.info("User client exit.");
 		NettyClient client = nettyClientMap.get(token);
 		if(client != null) {
 			client.close();
@@ -315,7 +310,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		while(queue.isEmpty()) {
 			wait();
 			if(isClosed) {
-				throw new InterruptedException("Client closed." + token);
+				throw new InterruptedException("Client closed.");
 			}
 		}
 		return queue.removeFirst();
