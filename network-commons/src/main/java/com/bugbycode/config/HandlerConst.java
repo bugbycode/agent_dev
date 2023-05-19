@@ -4,7 +4,7 @@ public class HandlerConst {
 	
 	public static final int MAX_FRAME_LENGTH = 4 * 1024 * 1024;
 	
-	public static final int LENGTH_FIELD_OFFSET = 17;
+	public static final int LENGTH_FIELD_OFFSET = 1;
 	
 	public static final int LENGTH_FIELD_LENGTH = 4;
 	
