@@ -1,7 +1,6 @@
 package com.bugbycode.conf;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
@@ -27,17 +26,17 @@ public class AppConfig {
 	
 	@Bean
 	public Map<String,NettyClient> nettyClientMap(){
-		return Collections.synchronizedMap(new HashMap<String,NettyClient>());
+		return new Hashtable<String,NettyClient>();
 	}
 	
 	@Bean
 	public Map<String,AgentHandler> agentHandlerMap(){
-		return Collections.synchronizedMap(new HashMap<String,AgentHandler>());
+		return new Hashtable<String,AgentHandler>();
 	}
 	
 	@Bean
 	public Map<String,AgentHandler> forwardHandlerMap(){
-		return Collections.synchronizedMap(new HashMap<String,AgentHandler>());
+		return new Hashtable<String,AgentHandler>();
 	}
 	
 	@Bean

@@ -54,13 +54,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		Message message = (Message) msg;
 		String token = message.getToken();
 		int type = message.getType();
+		
 		if(type == MessageCode.HEARTBEAT) {
-			
-		/*}else if(type == MessageCode.AUTH_SUCCESS) {
-			logger.info("Auth successfully.");
-		}else if(type == MessageCode.AUTH_ERROR) {
-			logger.info("Auth failed.");
-			ctx.close();*/
+			//
 		}else {
 			AgentHandler handler = agentHandlerMap.get(token);
 			if(handler == null) {
@@ -75,11 +71,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 			handler.sendMessage(message);
 		}
 	}
-	/*
-	@Override
-	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-		
-	}*/
 
 	@Override
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -87,7 +78,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 			IdleStateEvent event = (IdleStateEvent) evt;
 			if (event.state() == IdleState.READER_IDLE) {
 				loss_connect_time++;
-				//logger.info("Heartbeat timeout.");
 				if (loss_connect_time > 3) {
 					logger.info("Channel timeout.");
 					ctx.channel().close();
