@@ -94,6 +94,15 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					}
 				}else if(dataStr.startsWith("CONNECT")) {
 					protocol = Protocol.HTTPS;
+					String[] serverinfo = dataStr.split(" ");
+					if(serverinfo.length > 1) {
+						String[] serverArr = serverinfo[1].split(":");
+						int len = serverArr.length;
+						if(len == 2) {
+							port = Integer.valueOf(serverArr[1]);
+							host = serverArr[0];
+						}
+					}
 				}else if(dataStr.startsWith("Host:")) {
 					String[] serverArr = dataStr.split(":");
 					int len = serverArr.length;
