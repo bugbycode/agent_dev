@@ -1,5 +1,6 @@
 package com.bugbycode.agent.handler;
 
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private boolean isForward = false;
 	
+	private byte protocol = Protocol.HTTP;
+	
 	private EventLoopGroup remoteGroup;
 	
 	private StartupRunnable startup;
@@ -73,167 +76,100 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
-		if(firstConnect) {
-			firstConnect = false;
+		
+		if(this.firstConnect) {
 
-			String connectionStr = new String(data).trim();
+			this.firstConnect = false;
 			
-			String[] connectArr = connectionStr.split("\r\n");
+			new WorkThread(ctx).start();
 			
 			int port = 0;
 			String host = "";
-			int protocol = Protocol.HTTP;
-			
-			for(String dataStr : connectArr) {
-				if(dataStr.startsWith("GET") || dataStr.startsWith("POST")
-						 || dataStr.startsWith("HEAD") || dataStr.startsWith("OPTIONS")
-						 || dataStr.startsWith("PUT") || dataStr.startsWith("DELETE")
-						 || dataStr.startsWith("TRACE")) {
-					if(dataStr.contains("ftp:")) {
-						protocol = Protocol.FTP;
-					}
-				}else if(dataStr.startsWith("CONNECT")) {
-					protocol = Protocol.HTTPS;
-					String[] serverinfo = dataStr.split(" ");
-					if(serverinfo.length > 1) {
-						String[] serverArr = serverinfo[1].split(":");
+
+			this.protocol = data[0];
+			if(this.protocol == Protocol.SOCKET_4) {//socket4
+
+				this.protocol = Protocol.HTTPS;
+				
+				// |VN|CD|DSTPORT|DSTIP|USERID|NULL|
+				port = (data[2] << 0x08) &0xFF00 | data[3] & 0xFF;
+				
+				byte[] ipv4_buf = new byte[0x04];
+				
+				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
+				
+				host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
+				
+				Message message = connection(host, port);
+				
+				message.setType(MessageCode.TRANSFER_DATA);
+				message.setData(new byte[] {0x00,0x5A,0x00,0x00,0x00,0x00,0x00,0x00});
+				
+				sendMessage(message);
+				
+				return;
+			} else if(this.protocol == Protocol.SOCKET_5) { // socket5 setp1
+				sendMessage(new Message(token, MessageCode.TRANSFER_DATA, new byte[] {0x05,0x00}));
+				return;
+			} else {
+
+				this.protocol = Protocol.HTTP;
+				
+				String connectionStr = new String(data).trim();
+				
+				String[] connectArr = connectionStr.split("\r\n");
+				
+				
+				for(String dataStr : connectArr) {
+					if(dataStr.startsWith("GET") || dataStr.startsWith("POST")
+							 || dataStr.startsWith("HEAD") || dataStr.startsWith("OPTIONS")
+							 || dataStr.startsWith("PUT") || dataStr.startsWith("DELETE")
+							 || dataStr.startsWith("TRACE")) {
+						if(dataStr.contains("ftp:")) {
+							this.protocol = Protocol.FTP;
+						}
+					}else if(dataStr.startsWith("CONNECT")) {
+						this.protocol = Protocol.HTTPS;
+						String[] serverinfo = dataStr.split(" ");
+						if(serverinfo.length > 1) {
+							String[] serverArr = serverinfo[1].split(":");
+							int len = serverArr.length;
+							if(len == 2) {
+								port = Integer.valueOf(serverArr[1]);
+								host = serverArr[0];
+							}
+						}
+					}else if(dataStr.startsWith("Host:")) {
+						String[] serverArr = dataStr.split(":");
 						int len = serverArr.length;
 						if(len == 2) {
-							port = Integer.valueOf(serverArr[1]);
-							host = serverArr[0];
+							if(this.protocol == Protocol.HTTPS) {
+								port = 443;
+							}else if(this.protocol == Protocol.HTTP) {
+								port = 80;
+							}else if(this.protocol == Protocol.FTP) {
+								port = 21;
+							}
+							host = serverArr[1];
+						}else if(len == 3) {
+							port = Integer.valueOf(serverArr[2]);
+							host = serverArr[1];
+						}else {
+							throw new RuntimeException("Host error.");
 						}
+					}else if(dataStr.startsWith("Proxy-Connection:")) {
+						dataStr = dataStr.replace("Proxy-Connection:", "Connection:");
 					}
-				}else if(dataStr.startsWith("Host:")) {
-					String[] serverArr = dataStr.split(":");
-					int len = serverArr.length;
-					if(len == 2) {
-						if(protocol == Protocol.HTTPS) {
-							port = 443;
-						}else if(protocol == Protocol.HTTP) {
-							port = 80;
-						}else if(protocol == Protocol.FTP) {
-							port = 21;
-						}
-						host = serverArr[1];
-					}else if(len == 3) {
-						port = Integer.valueOf(serverArr[2]);
-						host = serverArr[1];
-					}else {
-						throw new RuntimeException("Host error.");
-					}
-				}else if(dataStr.startsWith("Proxy-Connection:")) {
-					dataStr = dataStr.replace("Proxy-Connection:", "Connection:");
 				}
 			}
-			
-			if(StringUtil.isBlank(host) || port == 0) {
-				throw new RuntimeException("Protocol error.");
-			}
-			
-			host = host.trim();
-			
-			ConnectionInfo con = new ConnectionInfo(host, port);
-			Message conMsg = new Message(token, MessageCode.CONNECTION, con);
-			
-			
-			Message message = null;
-			
-			HostModule hostModule = hostMapper.queryByHost(host);
-			
-			boolean isNewHost = false;
-			
-			Date now = new Date();
-			
-			if(hostModule == null) {
-				isNewHost = true;
-				hostModule = new HostModule();
-				hostModule.setHost(host);
-				hostModule.setForward(0);
-				hostModule.setConnTime(now);
-				try {
-					hostMapper.insert(hostModule);
-				}catch (Exception e) {
-					logger.info(e.getLocalizedMessage());
-				}
-			}
-			
-			if(!(hostModule == null || hostModule.getForward() == 0)) {
-				
-				forwardHandlerMap.put(token, this);
-				
-				startup.writeAndFlush(conMsg);
-				
-				message = read();
-				
-				if(message.getType() == MessageCode.CONNECTION_ERROR) {
-					try {
-						hostMapper.updateResultDatetimeByHost(host, 0, now);
-					}catch (Exception e) {
-						logger.info(e.getLocalizedMessage());
-					}
-					
-					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
-				}
-				
-				isForward = true;
-			} else {
-				new NettyClient(conMsg, nettyClientMap, agentHandlerMap,remoteGroup)
-				.connection();
-				
-				message = read();
-				
-				if(message.getType() == MessageCode.CONNECTION_ERROR) {
-					
-					//不是新访问的站点则默认不转发
-					if(!isNewHost) {
-						try {
-							hostMapper.updateResultDatetimeByHost(host, 0, now);
-						}catch (Exception e) {
-							logger.info(e.getLocalizedMessage());
-						}
-						
-						throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
-					}
-					
-					forwardHandlerMap.put(token, this);
-					
-					startup.writeAndFlush(conMsg);
-					
-					message = read();
-					
-					if(message.getType() == MessageCode.CONNECTION_ERROR) {
-						try {
-							hostMapper.updateResultDatetimeByHost(host, 0, now);
-						}catch (Exception e) {
-							logger.info(e.getLocalizedMessage());
-						}
-						
-						throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
-					}
-					
-					hostModule = hostMapper.queryByHost(host);
-					try {
-						hostMapper.updateForwardById(hostModule.getId(), 1);
-					}catch (Exception e) {
-						logger.info(e.getLocalizedMessage());
-					}
-					
-					isForward = true;
-				}
-			}
-			
-			try {
-				hostMapper.updateResultDatetimeByHost(host, 1, now);
-			}catch (Exception e) {
-				logger.info(e.getLocalizedMessage());
-			}
-			
-			new WorkThread(ctx).start();
+
+			Message message = connection(host, port);
 			
 			message.setType(MessageCode.TRANSFER_DATA);
 			message.setToken(token);
 			
-			if(protocol == Protocol.HTTPS || protocol == Protocol.FTP) {
+			if(this.protocol == Protocol.HTTPS || this.protocol == Protocol.HTTP || 
+					this.protocol == Protocol.FTP) {
 				message.setData(HTTP_PROXY_RESPONSE);
 				sendMessage(message);
 			}else{
@@ -250,7 +186,60 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					client.writeAndFlush(data);
 				}
 			}
-		}else {
+		} else if(this.protocol == Protocol.SOCKET_5) { // socket5
+			byte ver = data[0];
+			byte cmd = data[1];
+			//byte rsv = data[2];
+			byte atyp = data[3];
+			if(!(ver == 0x05 && cmd == 0x01)) {
+				ctx.close();
+				return;
+			}
+			String host = "";
+			int port = 0;
+			if(atyp == 0x01) { // ipv4
+				
+				byte[] ipv4_buf = new byte[0x04];
+				
+				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
+				
+				host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
+				
+			} else if(atyp == 0x03) { // domain name
+				
+				byte addr_len = data[0x04];
+				byte[] addr_buf = new byte[addr_len];
+				
+				System.arraycopy(data, 0x05, addr_buf, 0, addr_buf.length);
+				host = new String(addr_buf);
+				
+			} else if(atyp == 0x04) { // address
+				
+				int addr_len = data.length - 0x06;
+				byte[] ip_buf = new byte[addr_len];
+				
+				System.arraycopy(data, 0x04, ip_buf, 0, addr_len);
+				
+				host = InetAddress.getByAddress(ip_buf).getHostAddress();
+				
+			} else if(atyp == 0x06) { //ipv6
+				byte[] ipv6_buf = new byte[0x10];
+				System.arraycopy(data, 0x04, ipv6_buf, 0, ipv6_buf.length);
+				host = InetAddress.getByAddress(ipv6_buf).getHostAddress();
+			}
+			
+			port = (data[data.length - 2] << 0x08) & 0xFF00 | data[data.length - 1] & 0xFF;
+			
+			this.protocol = Protocol.HTTPS;
+			
+			Message message = connection(host, port);
+			data[1] = 0;
+			data[2] = 0;
+			message.setData(data);
+			message.setType(MessageCode.TRANSFER_DATA);
+			
+			sendMessage(message);
+		} else {
 			if(isForward) {
 				Message message = new Message();
 				message.setType(MessageCode.TRANSFER_DATA);
@@ -358,5 +347,109 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			}
 		}
 		
+	}
+	
+	private Message connection(String host,int port) throws Exception {
+		Message message = null;
+		host = host.trim();
+		
+		if(StringUtil.isBlank(host) || port == 0) {
+			throw new RuntimeException("Protocol error.");
+		}
+		
+		ConnectionInfo con = new ConnectionInfo(host, port);
+		Message conMsg = new Message(token, MessageCode.CONNECTION, con);
+		
+		HostModule hostModule = hostMapper.queryByHost(host);
+		
+		boolean isNewHost = false;
+		
+		Date now = new Date();
+		
+		if(hostModule == null) {
+			isNewHost = true;
+			hostModule = new HostModule();
+			hostModule.setHost(host);
+			hostModule.setForward(0);
+			hostModule.setConnTime(now);
+			try {
+				hostMapper.insert(hostModule);
+			}catch (Exception e) {
+				logger.info(e.getLocalizedMessage());
+			}
+		}
+		
+		if(!(hostModule == null || hostModule.getForward() == 0)) {
+			
+			forwardHandlerMap.put(token, this);
+			
+			startup.writeAndFlush(conMsg);
+			
+			message = read();
+			
+			if(message.getType() == MessageCode.CONNECTION_ERROR) {
+				try {
+					hostMapper.updateResultDatetimeByHost(host, 0, now);
+				}catch (Exception e) {
+					logger.info(e.getLocalizedMessage());
+				}
+				
+				throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+			}
+			
+			isForward = true;
+		} else {
+			new NettyClient(conMsg, nettyClientMap, agentHandlerMap,remoteGroup)
+			.connection();
+			
+			message = read();
+			
+			if(message.getType() == MessageCode.CONNECTION_ERROR) {
+				
+				//不是新访问的站点则默认不转发
+				if(!isNewHost) {
+					try {
+						hostMapper.updateResultDatetimeByHost(host, 0, now);
+					}catch (Exception e) {
+						logger.info(e.getLocalizedMessage());
+					}
+					
+					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+				}
+				
+				forwardHandlerMap.put(token, this);
+				
+				startup.writeAndFlush(conMsg);
+				
+				message = read();
+				
+				if(message.getType() == MessageCode.CONNECTION_ERROR) {
+					try {
+						hostMapper.updateResultDatetimeByHost(host, 0, now);
+					}catch (Exception e) {
+						logger.info(e.getLocalizedMessage());
+					}
+					
+					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+				}
+				
+				hostModule = hostMapper.queryByHost(host);
+				try {
+					hostMapper.updateForwardById(hostModule.getId(), 1);
+				}catch (Exception e) {
+					logger.info(e.getLocalizedMessage());
+				}
+				
+				isForward = true;
+			}
+		}
+		
+		try {
+			hostMapper.updateResultDatetimeByHost(host, 1, now);
+		}catch (Exception e) {
+			logger.info(e.getLocalizedMessage());
+		}
+		
+		return message;
 	}
 }
