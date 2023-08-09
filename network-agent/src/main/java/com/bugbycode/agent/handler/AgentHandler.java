@@ -264,7 +264,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		ctx.close();
 		//关闭连接
-		logger.info("Browser Closed Connection.");
 		NettyClient client = nettyClientMap.get(token);
 		if(client != null) {
 			client.close();
