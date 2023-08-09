@@ -98,7 +98,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
 				
-				host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
+				//host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
+				
+				host = StringUtil.formatIpv4Address(ipv4_buf);
 				
 				Message message = connection(host, port);
 				
@@ -203,7 +205,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
 				
-				host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
+				host = StringUtil.formatIpv4Address(ipv4_buf);
 				
 			} else if(atyp == 0x03) { // domain name
 				
@@ -213,7 +215,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				System.arraycopy(data, 0x05, addr_buf, 0, addr_buf.length);
 				host = new String(addr_buf);
 				
-			} else if(atyp == 0x04) { // address
+			} else if(atyp == 0x04) { // proxy ipv6 and remote ipv6
 				
 				int addr_len = data.length - 0x06;
 				byte[] ip_buf = new byte[addr_len];
@@ -222,7 +224,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				host = InetAddress.getByAddress(ip_buf).getHostAddress();
 				
-			} else if(atyp == 0x06) { //ipv6
+			} else if(atyp == 0x06) { //proxy ipv4 and remote ipv6
 				byte[] ipv6_buf = new byte[0x10];
 				System.arraycopy(data, 0x04, ipv6_buf, 0, ipv6_buf.length);
 				host = InetAddress.getByAddress(ipv6_buf).getHostAddress();
