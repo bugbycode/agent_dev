@@ -98,14 +98,16 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
 				
-				//host = InetAddress.getByAddress(ipv4_buf).getHostAddress();
-				
 				host = StringUtil.formatIpv4Address(ipv4_buf);
 				
 				Message message = connection(host, port);
 				
+				byte[] res_buf = new byte[0x08];
+				System.arraycopy(data, 0, res_buf, 0, res_buf.length);
+				res_buf[0x01] = 0x5A;
+				
 				message.setType(MessageCode.TRANSFER_DATA);
-				message.setData(new byte[] {0x00,0x5A,0x00,0x00,0x00,0x00,0x00,0x00});
+				message.setData(res_buf);
 				
 				sendMessage(message);
 				
