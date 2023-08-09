@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 	<head>
-		<title>网络代理管理中心</title>
+		<title>说出来了就不叫秘密</title>
 		<meta charset="UTF-8">
 		<meta http-equiv=Content-Type content="text/html; charset=utf-8" />
 		<!-- 引入样式 -->
@@ -34,22 +34,15 @@
 			.pageCard{
 				margin: 15px 15px;
 			}
+			
+			.el-table--enable-row-hover .el-table__body tr:hover>td{
+				background-color: #a1a1a9 !important;
+				color:#ffffff !important; 
+			}
 		</style>
 	</head>
 	<body>
 		<div id="app">
-			<el-row>
-				<el-col :span="24">
-					<el-menu
-			        class="el-menu-demo"
-			        mode="horizontal"
-			        background-color="#545c64"
-			        text-color="#fff"
-			        active-text-color="#ffd04b">
-			        <span class="title hand">网络代理管理中心</span>
-			        </el-menu>
-				</el-col>
-			</el-row>
 			<el-row>
 				<el-col :span="24">
 					<el-card class="box-card pageCard">
@@ -99,18 +92,17 @@
 		                        		<el-tag size="mini" type="danger" v-if="scope.row.result == 0">失败</el-tag>
 		                        	</template>
 		                        </el-table-column>
-		                        <el-table-column 
+		                        <el-table-column
 		                        width="150"
-		                        label="是否通过代理转发">
+		                        label="加密访问">
 		                        	<template slot-scope="scope">
-		                        		<el-select size="mini" v-model="scope.row.forward" placeholder="请选择" @change="changeForward(scope.row)">
-										    <el-option
-										      v-for="item in forwardOption"
-										      :key="item.key"
-										      :label="item.label"
-										      :value="item.key">
-										    </el-option>
-										 </el-select>
+		                        		<el-switch @change="changeForward(scope.row)"
+										    v-model="scope.row.forward"
+										    active-color="#13ce66"
+										    inactive-color="#d8ddda"
+										    :active-value="1"
+										    :inactive-value="0">
+									  </el-switch>
 		                        	</template>
 		                        </el-table-column>
 		                    </el-table>
