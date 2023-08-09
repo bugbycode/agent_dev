@@ -92,5 +92,9 @@ public class StringUtil {
 		}
 		return result;
 	}
+	
+	public static String formatIpv4Address(byte[] data) {
+		return String.format("%d.%d.%d.%d", data[0] & 0xFF,data[1] & 0xFF,data[2] & 0xFF,data[3] & 0xFF);
+	}
 
 }
