@@ -16,6 +16,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -71,6 +72,7 @@ public class AgentServer implements Runnable {
 
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
+				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(0x1000));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,
 						nettyClientMap,remoteGroup,startup,hostMapper));
