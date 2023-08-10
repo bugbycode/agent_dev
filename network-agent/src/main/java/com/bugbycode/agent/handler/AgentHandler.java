@@ -166,29 +166,26 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					}
 				}
 			}
-
+			
 			Message message = connection(host, port);
 			
 			message.setType(MessageCode.TRANSFER_DATA);
 			message.setToken(token);
 			
-			if(this.protocol == Protocol.HTTPS || this.protocol == Protocol.HTTP || 
-					this.protocol == Protocol.FTP) {
+			if(this.protocol == Protocol.HTTPS) {
 				message.setData(HTTP_PROXY_RESPONSE);
 				sendMessage(message);
-			}else{
-				if(isForward) {
-					message.setType(MessageCode.TRANSFER_DATA);
-					message.setData(data);
-					message.setToken(token);
-					startup.writeAndFlush(message);
-				}else {
-					NettyClient client = nettyClientMap.get(token);
-					if(client == null) {
-						throw new RuntimeException("token error.");
-					}
-					client.writeAndFlush(data);
+			}else if(isForward) {
+				message.setType(MessageCode.TRANSFER_DATA);
+				message.setData(data);
+				message.setToken(token);
+				startup.writeAndFlush(message);
+			}else {
+				NettyClient client = nettyClientMap.get(token);
+				if(client == null) {
+					throw new RuntimeException("token error.");
 				}
+				client.writeAndFlush(data);
 			}
 		} else if(this.protocol == Protocol.SOCKET_5) { // socket5
 			byte ver = data[0];
