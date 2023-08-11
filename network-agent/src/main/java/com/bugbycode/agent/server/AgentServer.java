@@ -72,7 +72,7 @@ public class AgentServer implements Runnable {
 
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(0x1000));
+				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(2048));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,
 						nettyClientMap,remoteGroup,startup,hostMapper));
