@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.config.HandlerConst;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 
@@ -72,7 +73,7 @@ public class AgentServer implements Runnable {
 
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(2048));
+				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,
 						nettyClientMap,remoteGroup,startup,hostMapper));
