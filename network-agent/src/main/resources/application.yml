@@ -16,5 +16,9 @@ spring:
     auth: 
       host: localhost #network-server 部署的ip地址
       port: 36500 #network-server 配置的代理端口
+  web:
+    login: #管理界面账号密码
+      username: root
+      password: china@dev
 loggin:
   config: classpath:log4j2.xml      
