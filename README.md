@@ -1,6 +1,6 @@
 # agent_dev
 
-这是一个使用netty实现网络代理的简单实例，本项目仅供学习研究使用。此项目经多次重构修复许多bug，当前版本启用了双向认证，并且使用RSA加密代理通道，需要使用者自己签发证书。
+这是一个使用netty实现网络代理的简单示例，本项目仅供学习研究使用。客户端与服务端启用了双向认证，并且使用RSA加密代理通道，需要使用者自己签发证书。
 
 # 项目编译
 
@@ -86,8 +86,12 @@ spring:
     auth: 
       host: localhost #network-server 部署的ip地址
       port: 36500 #network-server 配置的代理端口
+  web:
+    login: #管理界面账号密码
+      username: root
+      password: china@dev
 loggin:
-  config: classpath:log4j2.xml      
+  config: classpath:log4j2.xml
 ```
 ## 代理转发服务配置
 
