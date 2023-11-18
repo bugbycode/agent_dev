@@ -37,6 +37,10 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private Map<String,NettyClient> nettyClientMap;
 	
+	private int port = 0;
+	
+	private String host = "";
+	
 	private boolean firstConnect = false;
 	
 	private boolean isForward = false;
@@ -83,9 +87,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			new WorkThread(ctx).start();
 			
-			int port = 0;
-			String host = "";
-
 			this.protocol = data[0];
 			if(this.protocol == Protocol.SOCKET_4) {//socket4
 
@@ -269,6 +270,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		if(isForward) {
 			Message message = new Message(token, MessageCode.CLOSE_CONNECTION, null);
 			startup.writeAndFlush(message);
+			logger.info("Disconnection to " + host + ":" + port + ".");
 		}
 		forwardHandlerMap.remove(token);
 		this.isClosed = true;
@@ -395,6 +397,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 				
 				throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+				
+			} else if(message.getType() == MessageCode.CONNECTION_SUCCESS) {
+				
+				logger.info("Connection to " + host + ":" + port + " successfully.");
+				
 			}
 			
 			isForward = true;
@@ -431,6 +438,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					}
 					
 					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+					
+				} else if(message.getType() == MessageCode.CONNECTION_SUCCESS) {
+					
+					logger.info("Connection to " + host + ":" + port + " successfully.");
+					
 				}
 				
 				hostModule = hostMapper.queryByHost(host);
