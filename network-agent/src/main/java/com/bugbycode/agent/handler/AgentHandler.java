@@ -99,7 +99,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				System.arraycopy(data, 0x04, ipv4_buf, 0, ipv4_buf.length);
 				
-				host = StringUtil.formatIpv4Address(ipv4_buf);
+				host = StringUtil.formatIpv4Address(ipv4_buf).trim();
 				
 				Message message = connection(host, port);
 				
@@ -141,7 +141,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 							int len = serverArr.length;
 							if(len == 2) {
 								port = Integer.valueOf(serverArr[1]);
-								host = serverArr[0];
+								host = serverArr[0].trim();
 							}
 						}
 					}else if(dataStr.startsWith("Host:")) {
@@ -155,10 +155,10 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 							}else if(this.protocol == Protocol.FTP) {
 								port = 21;
 							}
-							host = serverArr[1];
+							host = serverArr[1].trim();
 						}else if(len == 3) {
 							port = Integer.valueOf(serverArr[2]);
-							host = serverArr[1];
+							host = serverArr[1].trim();
 						}else {
 							throw new RuntimeException("Host error.");
 						}
@@ -197,8 +197,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				ctx.close();
 				return;
 			}
-			String host = "";
-			int port = 0;
+			
 			if(atyp == 0x01) { // ipv4
 				
 				byte[] ipv4_buf = new byte[0x04];
