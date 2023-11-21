@@ -38,8 +38,6 @@ public class AgentServer implements Runnable {
 	
 	private Map<String,NettyClient> nettyClientMap;
 	
-	private EventLoopGroup remoteGroup;
-	
 	private StartupRunnable startup;
 	
 	private HostMapper hostMapper;
@@ -47,14 +45,12 @@ public class AgentServer implements Runnable {
 	public AgentServer(int agentPort,Map<String,AgentHandler> agentHandlerMap,
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
-			EventLoopGroup remoteGroup,
 			StartupRunnable startup,
 			HostMapper hostMapper) {
 		this.agentPort = agentPort;
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
-		this.remoteGroup = remoteGroup;
 		this.startup = startup;
 		this.hostMapper = hostMapper;
 	}
@@ -76,7 +72,7 @@ public class AgentServer implements Runnable {
 				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,
-						nettyClientMap,remoteGroup,startup,hostMapper));
+						nettyClientMap,startup,hostMapper));
 			}
 		});
 		

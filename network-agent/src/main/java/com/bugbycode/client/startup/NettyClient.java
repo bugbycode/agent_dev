@@ -19,6 +19,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
@@ -26,9 +27,9 @@ public class NettyClient {
 	
 	private final Logger logger = LogManager.getLogger(NettyClient.class);
 	
-	private Bootstrap remoteClient;
+	private Bootstrap bs;
 	
-	private EventLoopGroup remoteGroup;
+	private EventLoopGroup workGroup;
 	
 	private Map<String,NettyClient> nettyClientMap;
 	
@@ -45,9 +46,9 @@ public class NettyClient {
 	private Channel clientChannel;
 	
 	public NettyClient(Message msg,Map<String,NettyClient> nettyClientMap,
-			Map<String,AgentHandler> agentHandlerMap,EventLoopGroup remoteGroup) {
-		this.remoteClient = new Bootstrap();
-		this.remoteGroup = remoteGroup;
+			Map<String,AgentHandler> agentHandlerMap) {
+		this.bs = new Bootstrap();
+		this.workGroup = new NioEventLoopGroup();
 		this.nettyClientMap = nettyClientMap;
 		this.nettyClientMap.put(msg.getToken(), this);
 		this.agentHandlerMap = agentHandlerMap;
@@ -61,18 +62,18 @@ public class NettyClient {
 		host = conn.getHost();
 		port = conn.getPort();
 		
-		this.remoteClient.group(remoteGroup).channel(NioSocketChannel.class);
-		//this.remoteClient.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,3000);
-		this.remoteClient.option(ChannelOption.TCP_NODELAY, true);
-		this.remoteClient.option(ChannelOption.SO_KEEPALIVE, true);
-		this.remoteClient.handler(new ChannelInitializer<SocketChannel>() {
+		this.bs.group(workGroup).channel(NioSocketChannel.class);
+		//this.bs.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,3000);
+		this.bs.option(ChannelOption.TCP_NODELAY, true);
+		this.bs.option(ChannelOption.SO_KEEPALIVE, true);
+		this.bs.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.pipeline().addLast(new ClientHandler(agentHandlerMap,token,NettyClient.this));
 			}
 		});
 		
-		this.remoteClient.connect(host, port).addListener(new ChannelFutureListener() {
+		this.bs.connect(host, port).addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				Message message = new Message(token, MessageCode.CONNECTION_SUCCESS, null);
@@ -117,5 +118,7 @@ public class NettyClient {
 		nettyClientMap.remove(token);
 		
 		logger.info("Disconnection to " + host + ":" + port + ".");
+		
+		workGroup.shutdownGracefully();
 	}
 }

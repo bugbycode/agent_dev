@@ -22,7 +22,6 @@ import com.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
@@ -47,8 +46,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private byte protocol = Protocol.HTTP;
 	
-	private EventLoopGroup remoteGroup;
-	
 	private StartupRunnable startup;
 	
 	private final String token;
@@ -62,13 +59,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public AgentHandler(Map<String, AgentHandler> agentHandlerMap, 
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
-			EventLoopGroup remoteGroup,
 			StartupRunnable startup,
 			HostMapper hostMapper) {
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
-		this.remoteGroup = remoteGroup;
 		this.startup = startup;
 		this.firstConnect = true;
 		this.hostMapper = hostMapper;
@@ -405,7 +400,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			isForward = true;
 		} else {
-			new NettyClient(conMsg, nettyClientMap, agentHandlerMap,remoteGroup)
+			new NettyClient(conMsg, nettyClientMap, agentHandlerMap)
 			.connection();
 			
 			message = read();

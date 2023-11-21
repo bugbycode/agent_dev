@@ -63,7 +63,7 @@ public class AgentStartup implements ApplicationRunner {
 		
 		new WorkTread(startup).start();
 		
-		AgentServer server = new AgentServer(agentPort, agentHandlerMap,forwardHandlerMap,nettyClientMap,remoteGroup,startup,hostMapper);
+		AgentServer server = new AgentServer(agentPort, agentHandlerMap,forwardHandlerMap,nettyClientMap,startup,hostMapper);
 		new Thread(server).start();
 	}
 
