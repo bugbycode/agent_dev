@@ -21,11 +21,15 @@ import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 
 public class AgentServer implements Runnable {
 	
 	private final Logger logger = LogManager.getLogger(AgentServer.class);
 
+	private final Integer TIMEOUT_SECONDS = 60;
+	
 	private int agentPort = 0;
 	
 	private EventLoopGroup boss;
@@ -74,6 +78,8 @@ public class AgentServer implements Runnable {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
+				ch.pipeline().addLast(new ReadTimeoutHandler(TIMEOUT_SECONDS));
+				ch.pipeline().addLast(new WriteTimeoutHandler(TIMEOUT_SECONDS));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,
 						nettyClientMap,remoteGroup,startup,hostMapper));
