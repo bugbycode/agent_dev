@@ -2,7 +2,6 @@ package com.bugbycode.proxy.initializer;
 
 import javax.net.ssl.SSLEngine;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import com.util.ssl.SSLContextFactory;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -30,9 +28,6 @@ public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> 
 	
 	@Value("${spring.keystore.password:changeit}")
 	private String keyStorePassword;
-	
-	@Autowired
-	private NioEventLoopGroup remoteGroup;
 	
 	public ServerChannelInitializer() {
 		
@@ -54,7 +49,7 @@ public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> 
 						HandlerConst.LENGTH_FIELD_LENGTH, HandlerConst.LENGTH_AD_JUSTMENT, 
 						HandlerConst.INITIAL_BYTES_TO_STRIP),
 				new MessageEncoder(),
-				new ServerHandler(remoteGroup)
+				new ServerHandler()
 		);
 	}
 }

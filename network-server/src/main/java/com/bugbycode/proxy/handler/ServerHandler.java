@@ -17,7 +17,6 @@ import com.bugbycode.module.MessageCode;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 
@@ -29,11 +28,8 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	private Map<String,NettyClient> nettyClientMap;
 	
-	private NioEventLoopGroup remoteGroup;
-	
-	public ServerHandler(NioEventLoopGroup remoteGroup) {
+	public ServerHandler() {
 		this.nettyClientMap = new Hashtable<String,NettyClient>();
-		this.remoteGroup = remoteGroup;
 	}
 
 	@Override
@@ -82,8 +78,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 				return;
 			}
 			
-			NettyClient client = new NettyClient(message, channel,this.remoteGroup,
-					nettyClientMap);
+			NettyClient client = new NettyClient(message, channel,nettyClientMap);
 			client.connection();
 			return;
 		}
