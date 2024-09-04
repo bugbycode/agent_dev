@@ -16,6 +16,7 @@ import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageCode;
 import com.bugbycode.module.Protocol;
 import com.bugbycode.module.host.HostModule;
+import com.bugbycode.service.testnet.TestnetService;
 import com.util.RandomUtil;
 import com.util.StringUtil;
 
@@ -56,11 +57,13 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private HostMapper hostMapper;
 	
+	private TestnetService testnetService;
+	
 	public AgentHandler(Map<String, AgentHandler> agentHandlerMap, 
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
-			HostMapper hostMapper) {
+			HostMapper hostMapper,TestnetService testnetService) {
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
@@ -69,6 +72,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		this.hostMapper = hostMapper;
 		this.queue = new LinkedList<Message>();
 		this.token = RandomUtil.GetGuid32();
+		this.testnetService = testnetService;
 	}
 
 	@Override
@@ -118,7 +122,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				String connectionStr = new String(data).trim();
 				
 				String[] connectArr = connectionStr.split("\r\n");
-				
 				
 				for(String dataStr : connectArr) {
 					if(dataStr.startsWith("GET") || dataStr.startsWith("POST")
@@ -365,13 +368,25 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		if(hostModule == null) {
 			isNewHost = true;
 			hostModule = new HostModule();
+
 			hostModule.setHost(host);
 			hostModule.setForward(0);
 			hostModule.setConnTime(now);
+			
+			if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
+				
+				String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
+				
+				if(!testnetService.checkHttpConnect(url)) {
+					hostModule.setForward(1);
+				}
+				
+			}
+			
 			try {
 				hostMapper.insert(hostModule);
 			}catch (Exception e) {
-				logger.info(e.getLocalizedMessage());
+				logger.error(e.getLocalizedMessage());
 			}
 		}
 		
@@ -447,6 +462,23 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 				
 				isForward = true;
+			} else {
+
+				if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
+					
+					String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
+					
+					if(!testnetService.checkHttpConnect(url)) {
+						
+						hostModule = hostMapper.queryByHost(host);
+						try {
+							hostMapper.updateForwardById(hostModule.getId(), 1);
+						}catch (Exception e) {
+							logger.info(e.getLocalizedMessage());
+						}
+						
+					}
+				}
 			}
 		}
 		

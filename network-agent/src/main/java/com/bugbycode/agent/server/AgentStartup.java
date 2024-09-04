@@ -14,6 +14,7 @@ import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.mapper.table.TableMapper;
+import com.bugbycode.service.testnet.TestnetService;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 
@@ -54,6 +55,9 @@ public class AgentStartup implements ApplicationRunner {
 	@Autowired
 	private NioEventLoopGroup remoteGroup;
 	
+	@Autowired
+	private TestnetService testnetService;
+	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		
@@ -63,7 +67,7 @@ public class AgentStartup implements ApplicationRunner {
 		
 		new WorkTread(startup).start();
 		
-		AgentServer server = new AgentServer(agentPort, agentHandlerMap,forwardHandlerMap,nettyClientMap,startup,hostMapper);
+		AgentServer server = new AgentServer(agentPort, agentHandlerMap,forwardHandlerMap,nettyClientMap,startup,hostMapper,testnetService);
 		new Thread(server).start();
 	}
 
