@@ -462,21 +462,27 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 				
 				isForward = true;
+				
 			} else {
 
 				if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
 					
-					String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
+					hostModule = hostMapper.queryByHost(host);
 					
-					if(!testnetService.checkHttpConnect(url)) {
+					if(hostModule != null && hostModule.getForward() == 0) {
 						
-						hostModule = hostMapper.queryByHost(host);
-						try {
-							hostMapper.updateForwardById(hostModule.getId(), 1);
-						}catch (Exception e) {
-							logger.info(e.getLocalizedMessage());
+						String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
+						
+						if(!testnetService.checkHttpConnect(url)) {
+							
+							hostModule = hostMapper.queryByHost(host);
+							try {
+								hostMapper.updateForwardById(hostModule.getId(), 1);
+							}catch (Exception e) {
+								logger.info(e.getLocalizedMessage());
+							}
+							
 						}
-						
 					}
 				}
 			}
