@@ -17,6 +17,10 @@ import com.bugbycode.module.MessageCode;
 import com.bugbycode.module.Protocol;
 import com.bugbycode.module.host.HostModule;
 import com.bugbycode.service.testnet.TestnetService;
+import com.bugbycode.webapp.pool.WorkTaskPool;
+import com.bugbycode.webapp.pool.task.host.InsertHostTask;
+import com.bugbycode.webapp.pool.task.host.UpdateForwardTask;
+import com.bugbycode.webapp.pool.task.host.UpdateResultTask;
 import com.util.RandomUtil;
 import com.util.StringUtil;
 
@@ -59,11 +63,14 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private TestnetService testnetService;
 	
+	private WorkTaskPool workTaskPool;
+	
 	public AgentHandler(Map<String, AgentHandler> agentHandlerMap, 
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
-			HostMapper hostMapper,TestnetService testnetService) {
+			HostMapper hostMapper,TestnetService testnetService,
+			WorkTaskPool workTaskPool) {
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
@@ -73,6 +80,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		this.queue = new LinkedList<Message>();
 		this.token = RandomUtil.GetGuid32();
 		this.testnetService = testnetService;
+		this.workTaskPool = workTaskPool;
 	}
 
 	@Override
@@ -383,11 +391,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 			}
 			
-			try {
-				hostMapper.insert(hostModule);
-			}catch (Exception e) {
-				logger.error(e.getLocalizedMessage());
-			}
+			workTaskPool.add(new InsertHostTask(hostMapper, hostModule));
+			
 		}
 		
 		if(!(hostModule == null || hostModule.getForward() == 0)) {
@@ -399,11 +404,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			message = read();
 			
 			if(message.getType() == MessageCode.CONNECTION_ERROR) {
-				try {
-					hostMapper.updateResultDatetimeByHost(host, 0, now);
-				}catch (Exception e) {
-					logger.info(e.getLocalizedMessage());
-				}
+				
+				workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 				
 				throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
 				
@@ -424,11 +426,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				//不是新访问的站点则默认不转发
 				if(!isNewHost) {
-					try {
-						hostMapper.updateResultDatetimeByHost(host, 0, now);
-					}catch (Exception e) {
-						logger.info(e.getLocalizedMessage());
-					}
+					
+					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
 					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
 				}
@@ -440,11 +439,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				message = read();
 				
 				if(message.getType() == MessageCode.CONNECTION_ERROR) {
-					try {
-						hostMapper.updateResultDatetimeByHost(host, 0, now);
-					}catch (Exception e) {
-						logger.info(e.getLocalizedMessage());
-					}
+					
+					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
 					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
 					
@@ -454,12 +450,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 				}
 				
-				hostModule = hostMapper.queryByHost(host);
-				try {
-					hostMapper.updateForwardById(hostModule.getId(), 1);
-				}catch (Exception e) {
-					logger.info(e.getLocalizedMessage());
-				}
+				workTaskPool.add(new UpdateForwardTask(host, 1, hostMapper));
 				
 				isForward = true;
 				
@@ -474,25 +465,14 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 						String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
 						
 						if(!testnetService.checkHttpConnect(url)) {
-							
-							hostModule = hostMapper.queryByHost(host);
-							try {
-								hostMapper.updateForwardById(hostModule.getId(), 1);
-							}catch (Exception e) {
-								logger.info(e.getLocalizedMessage());
-							}
-							
+							workTaskPool.add(new UpdateForwardTask(host, 1, hostMapper));
 						}
 					}
 				}
 			}
 		}
 		
-		try {
-			hostMapper.updateResultDatetimeByHost(host, 1, now);
-		}catch (Exception e) {
-			logger.info(e.getLocalizedMessage());
-		}
+		workTaskPool.add(new UpdateResultTask(hostMapper, host, 1, now));
 		
 		return message;
 	}

@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.webapp.pool.WorkTaskPool;
 
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -81,5 +82,10 @@ public class AppConfig {
 		public void handleError(ClientHttpResponse response) throws IOException {
 			logger.error("Error response received with status code: " + response.getStatusCode());
 		}
+	}
+	
+	@Bean
+	public WorkTaskPool workTaskPool() {
+		return new WorkTaskPool("SqliteDataBaseWorkThread",1);
 	}
 }

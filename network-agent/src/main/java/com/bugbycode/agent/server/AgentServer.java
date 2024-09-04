@@ -11,6 +11,7 @@ import com.bugbycode.config.HandlerConst;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.service.testnet.TestnetService;
+import com.bugbycode.webapp.pool.WorkTaskPool;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -45,11 +46,14 @@ public class AgentServer implements Runnable {
 	
 	private TestnetService testnetService;
 	
+	private WorkTaskPool workTaskPool;
+	
 	public AgentServer(int agentPort,Map<String,AgentHandler> agentHandlerMap,
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
-			HostMapper hostMapper,TestnetService testnetService) {
+			HostMapper hostMapper,TestnetService testnetService,
+			WorkTaskPool workTaskPool) {
 		this.agentPort = agentPort;
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
@@ -57,6 +61,7 @@ public class AgentServer implements Runnable {
 		this.startup = startup;
 		this.hostMapper = hostMapper;
 		this.testnetService = testnetService;
+		this.workTaskPool = workTaskPool;
 	}
 	
 	@Override
@@ -75,8 +80,8 @@ public class AgentServer implements Runnable {
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
-						forwardHandlerMap,
-						nettyClientMap,startup,hostMapper,testnetService));
+						forwardHandlerMap,nettyClientMap,startup,hostMapper,
+						testnetService,workTaskPool));
 			}
 		});
 		
