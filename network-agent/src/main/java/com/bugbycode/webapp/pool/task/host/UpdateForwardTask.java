@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.mapper.host.HostMapper;
-import com.bugbycode.module.host.HostModule;
 
 /**
  * 修改转发信息
@@ -34,10 +33,7 @@ public class UpdateForwardTask implements Runnable {
 	@Override
 	public void run() {
 		try {
-			HostModule hostModule = hostMapper.queryByHost(host);
-			if(hostModule != null) {
-				hostMapper.updateForwardById(hostModule.getId(), forward);
-			}
+			hostMapper.updateForwardByHost(host, forward);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage());
 		}

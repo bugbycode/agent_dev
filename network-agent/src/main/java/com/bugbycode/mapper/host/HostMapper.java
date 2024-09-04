@@ -17,6 +17,8 @@ public interface HostMapper {
 	
 	public int updateForwardById(@Param("id") int id,@Param("forward") int forward);
 	
+	public int updateForwardByHost(@Param("host") String host,@Param("forward") int forward);
+	
 	public HostModule queryByHost(String host);
 	
 	/**

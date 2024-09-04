@@ -73,6 +73,12 @@
 		]]>
 	</update>
 	
+	<update id="updateForwardByHost" >
+		<![CDATA[
+			UPDATE host SET forward = #{forward} WHERE host = #{host}
+		]]>
+	</update>
+	
 	<update id="updateResultDatetimeByHost" >
 		<![CDATA[
 			UPDATE host SET result = #{result}, datetime = #{datetime} WHERE host = #{host}
