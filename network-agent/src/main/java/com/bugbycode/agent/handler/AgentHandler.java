@@ -21,6 +21,7 @@ import com.bugbycode.webapp.pool.WorkTaskPool;
 import com.bugbycode.webapp.pool.task.host.InsertHostTask;
 import com.bugbycode.webapp.pool.task.host.UpdateForwardTask;
 import com.bugbycode.webapp.pool.task.host.UpdateResultTask;
+import com.bugbycode.webapp.pool.task.testnet.TestNetConnectTask;
 import com.util.RandomUtil;
 import com.util.StringUtil;
 
@@ -464,9 +465,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 						
 						String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
 						
-						if(!testnetService.checkHttpConnect(url)) {
-							workTaskPool.add(new UpdateForwardTask(host, 1, hostMapper));
-						}
+						workTaskPool.add(new TestNetConnectTask(testnetService, url, 
+								new UpdateForwardTask(host, 1, hostMapper)));
+						
 					}
 				}
 			}
