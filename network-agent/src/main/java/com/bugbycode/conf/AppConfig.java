@@ -74,8 +74,8 @@ public class AppConfig {
 		
 		@Override
 		public boolean hasError(ClientHttpResponse response) throws IOException {
-			return response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR 
-		               || response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR;
+			return response.getStatusCode().value() == HttpStatus.Series.CLIENT_ERROR.value() 
+		               || response.getStatusCode().value() == HttpStatus.Series.SERVER_ERROR.value();
 		}
 		
 		@Override

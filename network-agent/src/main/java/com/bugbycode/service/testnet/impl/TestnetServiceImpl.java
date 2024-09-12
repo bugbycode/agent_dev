@@ -27,7 +27,7 @@ public class TestnetServiceImpl implements TestnetService {
 		HttpStatus status = HttpStatus.REQUEST_TIMEOUT;
 		try {
 			ResponseEntity<String> result = restTemplate.getForEntity(new URI(url), String.class);
-			status = result.getStatusCode();
+			status = HttpStatus.resolve(result.getStatusCode().value());
 		} catch (RestClientException e) {
 			logger.error(e.getLocalizedMessage());
 		} catch (URISyntaxException e) {

@@ -1,6 +1,5 @@
 package com.bugbycode.conf;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -13,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+
+import jakarta.annotation.Resource;
 
 @Configuration
 @MapperScan(basePackages = "com.bugbycode.mapper",sqlSessionFactoryRef = "sqlSessionFactory")
