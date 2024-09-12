@@ -13,7 +13,7 @@ import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 import com.bugbycode.module.Protocol;
 import com.bugbycode.module.host.HostModule;
 import com.bugbycode.service.testnet.TestnetService;
@@ -50,7 +50,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private boolean isForward = false;
 	
-	private byte protocol = Protocol.HTTP;
+	private Protocol protocol = Protocol.HTTP;
 	
 	private StartupRunnable startup;
 	
@@ -93,9 +93,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 			this.firstConnect = false;
 			
-			new WorkThread(ctx).start();
+			this.protocol = Protocol.resolve(data[0]);
 			
-			this.protocol = data[0];
 			if(this.protocol == Protocol.SOCKET_4) {//socket4
 
 				this.protocol = Protocol.HTTPS;
@@ -109,20 +108,20 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				host = StringUtil.formatIpv4Address(ipv4_buf).trim();
 				
-				Message message = connection(host, port);
+				Message message = connection(host, port, ctx);
 				
 				byte[] res_buf = new byte[0x08];
 				System.arraycopy(data, 0, res_buf, 0, res_buf.length);
 				res_buf[0x01] = 0x5A;
 				
-				message.setType(MessageCode.TRANSFER_DATA);
+				message.setType(MessageType.TRANSFER_DATA);
 				message.setData(res_buf);
 				
 				sendMessage(message);
 				
 				return;
 			} else if(this.protocol == Protocol.SOCKET_5) { // socket5 setp1
-				sendMessage(new Message(token, MessageCode.TRANSFER_DATA, new byte[] {0x05,0x00}));
+				firstSendMessageToClient(new Message(token, MessageType.TRANSFER_DATA, new byte[] {0x05,0x00}), ctx);
 				return;
 			} else {
 
@@ -175,16 +174,16 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 			}
 			
-			Message message = connection(host, port);
+			Message message = connection(host, port, ctx);
 			
-			message.setType(MessageCode.TRANSFER_DATA);
+			message.setType(MessageType.TRANSFER_DATA);
 			message.setToken(token);
 			
 			if(this.protocol == Protocol.HTTPS) {
 				message.setData(HTTP_PROXY_RESPONSE);
 				sendMessage(message);
 			}else if(isForward) {
-				message.setType(MessageCode.TRANSFER_DATA);
+				message.setType(MessageType.TRANSFER_DATA);
 				message.setData(data);
 				message.setToken(token);
 				startup.writeAndFlush(message);
@@ -240,17 +239,18 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			this.protocol = Protocol.HTTPS;
 			
-			Message message = connection(host, port);
+			Message message = connection(host, port, ctx);
+			
 			data[1] = 0;
 			data[2] = 0;
 			message.setData(data);
-			message.setType(MessageCode.TRANSFER_DATA);
+			message.setType(MessageType.TRANSFER_DATA);
 			
 			sendMessage(message);
 		} else {
 			if(isForward) {
 				Message message = new Message();
-				message.setType(MessageCode.TRANSFER_DATA);
+				message.setType(MessageType.TRANSFER_DATA);
 				message.setData(data);
 				message.setToken(token);
 				startup.writeAndFlush(message);
@@ -274,7 +274,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 		agentHandlerMap.remove(token);
 		if(isForward) {
-			Message message = new Message(token, MessageCode.CLOSE_CONNECTION, null);
+			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 			startup.writeAndFlush(message);
 			logger.info("Disconnection to " + host + ":" + port + ".");
 		}
@@ -285,13 +285,13 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		super.channelActive(ctx);
 		this.isClosed = false;
 		agentHandlerMap.put(token, this);
 	}
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		notifyTask();
 		String error = cause.getMessage();
 		if(StringUtil.isBlank(error)) {
 			cause.printStackTrace();
@@ -333,15 +333,20 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		@Override
 		public void run() {
 			Channel channel = ctx.channel();
+			
+			notifyTask();
+			
 			while(!isClosed) {
 				try {
+					
 					Message msg = read();
-					if(msg.getType() == MessageCode.CLOSE_CONNECTION) {
+					
+					if(msg.getType() == MessageType.CLOSE_CONNECTION) {
 						ctx.close();
 						continue;
 					}
 					
-					if(msg.getType() != MessageCode.TRANSFER_DATA) {
+					if(msg.getType() != MessageType.TRANSFER_DATA) {
 						continue;
 					}
 					
@@ -357,7 +362,20 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		
 	}
 	
-	private Message connection(String host,int port) throws Exception {
+	private void firstSendMessageToClient(Message msg, ChannelHandlerContext ctx) {
+		
+		if(msg.getType() == MessageType.TRANSFER_DATA) {
+			
+			Channel channel = ctx.channel();
+			byte[] data = (byte[]) msg.getData();
+			ByteBuf buff = channel.alloc().buffer(data.length);
+			buff.writeBytes(data);
+			channel.writeAndFlush(buff);
+			
+		}
+	}
+	
+	private Message connection(String host,int port,ChannelHandlerContext ctx) throws Exception {
 		Message message = null;
 		host = host.trim();
 		
@@ -366,7 +384,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 		
 		ConnectionInfo con = new ConnectionInfo(host, port);
-		Message conMsg = new Message(token, MessageCode.CONNECTION, con);
+		Message conMsg = new Message(token, MessageType.CONNECTION, con);
 		
 		HostModule hostModule = hostMapper.queryByHost(host);
 		
@@ -404,13 +422,13 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			message = read();
 			
-			if(message.getType() == MessageCode.CONNECTION_ERROR) {
+			if(message.getType() == MessageType.CONNECTION_ERROR) {
 				
 				workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 				
 				throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
 				
-			} else if(message.getType() == MessageCode.CONNECTION_SUCCESS) {
+			} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 				
 				logger.info("Connection to " + host + ":" + port + " successfully.");
 				
@@ -423,7 +441,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			message = read();
 			
-			if(message.getType() == MessageCode.CONNECTION_ERROR) {
+			if(message.getType() == MessageType.CONNECTION_ERROR) {
 				
 				//不是新访问的站点则默认不转发
 				if(!isNewHost) {
@@ -439,13 +457,13 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				message = read();
 				
-				if(message.getType() == MessageCode.CONNECTION_ERROR) {
+				if(message.getType() == MessageType.CONNECTION_ERROR) {
 					
 					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
 					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
 					
-				} else if(message.getType() == MessageCode.CONNECTION_SUCCESS) {
+				} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 					
 					logger.info("Connection to " + host + ":" + port + " successfully.");
 					
@@ -474,6 +492,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 		
 		workTaskPool.add(new UpdateResultTask(hostMapper, host, 1, now));
+		
+		new WorkThread(ctx).start();
 		
 		return message;
 	}
