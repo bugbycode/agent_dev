@@ -21,4 +21,4 @@ spring:
       username: root
       password: china@dev
 loggin:
-  config: classpath:log4j2.xml      
+  config: classpath:log4j2.xml
