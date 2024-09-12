@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.client.handler.ClientHandler;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -74,15 +74,15 @@ public class NettyClient {
 		this.bs.connect(host, port).addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
-				Message message = new Message(token, MessageCode.CONNECTION_SUCCESS, null);
+				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
 					logger.info("Connection to " + host + ":" + port + " successfully.");
-					message.setType(MessageCode.CONNECTION_SUCCESS);
+					message.setType(MessageType.CONNECTION_SUCCESS);
 					serverChannel.writeAndFlush(message);
 					clientChannel = future.channel();
 				}else {
 					logger.info("Connection to " + host + ":" + port + " failed.");
-					message.setType(MessageCode.CONNECTION_ERROR);
+					message.setType(MessageType.CONNECTION_ERROR);
 					serverChannel.writeAndFlush(message);
 					nettyClientMap.remove(token);
 					close(true);
@@ -102,7 +102,7 @@ public class NettyClient {
 		this.nettyClientMap.remove(token);
 		
 		if(sendClose) {
-			Message message = new Message(token, MessageCode.CLOSE_CONNECTION, null);
+			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 			serverChannel.writeAndFlush(message);
 		}
 		

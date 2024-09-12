@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -62,17 +62,17 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		loss_connect_time = 0;
 		Channel channel = ctx.channel();
 		Message message = (Message)msg;
-		int type = message.getType();
+		MessageType type = message.getType();
 		Object data = message.getData();
 		String token = message.getToken();
 		
-		if(type == MessageCode.HEARTBEAT) {
+		if(type == MessageType.HEARTBEAT) {
 			//
 			return;
 		}
 		
 		// Connection
-		if(type == MessageCode.CONNECTION) {
+		if(type == MessageType.CONNECTION) {
 			if(!(data instanceof ConnectionInfo)) {
 				ctx.close();
 				return;
@@ -83,7 +83,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		
-		if(type == MessageCode.CLOSE_CONNECTION) {
+		if(type == MessageType.CLOSE_CONNECTION) {
 			NettyClient client = nettyClientMap.get(token);
 			if(client != null) {
 				client.close(false);
@@ -91,11 +91,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			return;
 		}
 		
-		if(type == MessageCode.TRANSFER_DATA) {
+		if(type == MessageType.TRANSFER_DATA) {
 			NettyClient client = nettyClientMap.get(token);
 			if(client == null) {
 				message.setToken(token);
-				message.setType(MessageCode.CLOSE_CONNECTION);
+				message.setType(MessageType.CLOSE_CONNECTION);
 				message.setData(null);
 				channel.writeAndFlush(message);
 				return;
@@ -117,7 +117,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 				}
 			} else if (event.state() == IdleState.WRITER_IDLE) {
 				Message msg = new Message();
-				msg.setType(MessageCode.HEARTBEAT);
+				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
 			}
 		}
