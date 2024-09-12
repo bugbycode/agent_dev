@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -42,7 +42,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		Set<String> set = agentHandlerMap.keySet();
 		for(String token : set) {
 			AgentHandler handler = agentHandlerMap.get(token);
-			Message message = new Message(token, MessageCode.CLOSE_CONNECTION, null);
+			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 			handler.sendMessage(message);
 		}
 	}
@@ -52,16 +52,16 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		loss_connect_time = 0;
 		Message message = (Message) msg;
 		String token = message.getToken();
-		int type = message.getType();
+		MessageType type = message.getType();
 		
-		if(type == MessageCode.HEARTBEAT) {
+		if(type == MessageType.HEARTBEAT) {
 			//
 		}else {
 			AgentHandler handler = agentHandlerMap.get(token);
 			if(handler == null) {
-				if(type != MessageCode.CLOSE_CONNECTION) {
+				if(type != MessageType.CLOSE_CONNECTION) {
 					message.setData(null);
-					message.setType(MessageCode.CLOSE_CONNECTION);
+					message.setType(MessageType.CLOSE_CONNECTION);
 					message.setToken(token);
 					ctx.writeAndFlush(message);
 				}
@@ -83,7 +83,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				}
 			} else if (event.state() == IdleState.WRITER_IDLE) {
 				Message msg = new Message();
-				msg.setType(MessageCode.HEARTBEAT);
+				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
 			}
 		}

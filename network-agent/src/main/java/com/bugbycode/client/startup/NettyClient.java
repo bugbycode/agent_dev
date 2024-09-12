@@ -9,7 +9,7 @@ import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.handler.ClientHandler;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -75,15 +75,15 @@ public class NettyClient {
 		this.bs.connect(host, port).addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
-				Message message = new Message(token, MessageCode.CONNECTION_SUCCESS, null);
+				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
 					logger.info("Connection to " + host + ":" + port + " successfully.");
-					message.setType(MessageCode.CONNECTION_SUCCESS);
+					message.setType(MessageType.CONNECTION_SUCCESS);
 					clientChannel = future.channel();
 				}else {
 					nettyClientMap.remove(token);
 					logger.info("Connection to " + host + ":" + port + " failed.");
-					message.setType(MessageCode.CONNECTION_ERROR);
+					message.setType(MessageType.CONNECTION_ERROR);
 				}
 				AgentHandler handler = agentHandlerMap.get(token);
 				if(handler != null) {
@@ -108,7 +108,7 @@ public class NettyClient {
 			clientChannel.close();
 		}
 		
-		Message message = new Message(token, MessageCode.CLOSE_CONNECTION, null);
+		Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 		AgentHandler handler = agentHandlerMap.get(token);
 		if(handler != null) {
 			handler.sendMessage(message);

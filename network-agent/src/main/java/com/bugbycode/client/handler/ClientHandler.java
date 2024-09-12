@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -34,7 +34,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
-		Message message = new Message(token, MessageCode.TRANSFER_DATA, data);
+		Message message = new Message(token, MessageType.TRANSFER_DATA, data);
 		AgentHandler handler = agentHandlerMap.get(token);
 		if(handler == null) {
 			throw new RuntimeException("Connetion closed.");
