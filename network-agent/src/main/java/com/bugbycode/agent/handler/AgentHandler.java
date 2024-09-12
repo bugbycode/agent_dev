@@ -473,7 +473,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				isForward = true;
 				
-			} else {
+			} /*else {
 
 				if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
 					
@@ -488,7 +488,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 						
 					}
 				}
-			}
+			}*/
 		}
 		
 		workTaskPool.add(new UpdateResultTask(hostMapper, host, 1, now));
