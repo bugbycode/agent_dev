@@ -10,8 +10,6 @@ public class ConnectionInfo implements Serializable{
 	 */
 	private static final long serialVersionUID = 9027795841206273339L;
 
-	private int protocol;
-	
 	private String host;
 	
 	private int port;
@@ -23,14 +21,6 @@ public class ConnectionInfo implements Serializable{
 	public ConnectionInfo(String host, int port) {
 		this.host = host;
 		this.port = port;
-	}
-
-	public int getProtocol() {
-		return protocol;
-	}
-
-	public void setProtocol(int protocol) {
-		this.protocol = protocol;
 	}
 
 	public String getHost() {
@@ -48,4 +38,10 @@ public class ConnectionInfo implements Serializable{
 	public void setPort(int port) {
 		this.port = port;
 	}
+
+	@Override
+	public String toString() {
+		return "ConnectionInfo [host=" + host + ", port=" + port + "]";
+	}
+	
 }

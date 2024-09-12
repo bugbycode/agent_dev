@@ -2,7 +2,7 @@ package com.bugbycode.handler;
 
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 import com.util.StringUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -15,12 +15,12 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
 		
 		//发送消息类型
-		int type = msg.getType();
-		out.writeByte(type);
+		MessageType type = msg.getType();
+		out.writeByte(type.getValue());
 		int length = 0;;
 		byte[] body = {};
 		
-		if(type == MessageCode.HEARTBEAT){
+		if(type == MessageType.HEARTBEAT){
 			out.writeInt(0);
 		}else {
 			
@@ -35,7 +35,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 			
 			//计算长度
 			Object obj = msg.getData();
-			if(type == MessageCode.CONNECTION) {
+			if(type == MessageType.CONNECTION) {
 				
 				ConnectionInfo conn = (ConnectionInfo) obj;
 				
@@ -50,7 +50,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 				System.arraycopy(host_buf, 0, body, 2, host_buf.length);
 				
 				
-			}else if(type == MessageCode.TRANSFER_DATA) {
+			}else if(type == MessageType.TRANSFER_DATA) {
 				body = (byte[]) obj;
 			}else {
 				body = new byte[0];

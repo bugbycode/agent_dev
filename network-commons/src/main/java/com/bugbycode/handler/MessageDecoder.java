@@ -4,7 +4,7 @@ package com.bugbycode.handler;
 import com.bugbycode.config.HandlerConst;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageCode;
+import com.bugbycode.module.MessageType;
 import com.util.StringUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -43,7 +43,10 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 			//读取消息类型总共1字节
 			int type = in.readByte() & 0xFF;
 			
-			message.setType(type);
+			MessageType messageType = message.resolve(type);
+			
+			message.setType(messageType);
+			
 			//读取长度 总共4个字节
 			int length = in.readInt();
 			
@@ -51,7 +54,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 				return null;
 			}
 			
-			if(type != MessageCode.HEARTBEAT) {
+			if(messageType != MessageType.HEARTBEAT) {
 				
 				//读取token信息 总共16个字节
 				byte[] token_buff = new byte[0x10];
@@ -71,7 +74,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 				message.setToken(token);
 				
 				//以下是消息内容
-				if(type == MessageCode.CONNECTION) {
+				if(messageType == MessageType.CONNECTION) {
 					
 					int port = ((data[0] << 0x08) & 0xFFFF) | (data[1] & 0xFF);
 					
@@ -79,7 +82,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 					
 					message.setData(new ConnectionInfo(host,port));
 					
-				}else if(type == MessageCode.TRANSFER_DATA) {
+				}else if(messageType == MessageType.TRANSFER_DATA) {
 					message.setData(data);
 				}
 			}

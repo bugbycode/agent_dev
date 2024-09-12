@@ -1,14 +1,35 @@
 package com.bugbycode.module;
 
-public interface Protocol {
+public enum Protocol {
+	FTP(1,"FTP"),
+	HTTP(0,"HTTP"),
+	HTTPS(2,"HTTPS"),
+	SOCKET_4(4,"SOCKET_4"),
+	SOCKET_5(5,"SOCKET_5"),;
+
+	private int value;
+	private String label;
 	
-	public static final byte FTP = 1;
-	
-	public static final byte HTTP = 0;
-	
-	public static final byte HTTPS = 2;
-	
-	public static final byte SOCKET_4 = 0x04;
-	
-	public static final byte SOCKET_5 = 0x05;
+	Protocol(int value, String label) {
+		this.value = value;
+		this.label = label;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public static Protocol resolve(int value) {
+		Protocol[] arr = values();
+		for(Protocol p : arr) {
+			if(p.getValue() == value) {
+				return p;
+			}
+		}
+		return HTTP;
+	};
 }
