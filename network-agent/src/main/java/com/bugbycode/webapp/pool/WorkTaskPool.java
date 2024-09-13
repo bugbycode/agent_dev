@@ -49,10 +49,10 @@ public class WorkTaskPool extends ThreadGroup {
 	}
 	
 	private void start() {
+		this.isClosed = false;
 		for(int index = 0;index < max_thread;index++) {
 			new WorkThread().start();
 		}
-		this.isClosed = false;
 	}
 	
 	private class WorkThread extends Thread {
