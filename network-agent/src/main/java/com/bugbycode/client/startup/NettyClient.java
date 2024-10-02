@@ -63,6 +63,7 @@ public class NettyClient {
 		port = conn.getPort();
 		
 		this.bs.group(workGroup).channel(NioSocketChannel.class);
+		this.bs.option(ChannelOption.SO_REUSEADDR, true);
 		this.bs.option(ChannelOption.TCP_NODELAY, true);
 		this.bs.option(ChannelOption.SO_KEEPALIVE, true);
 		this.bs.handler(new ChannelInitializer<SocketChannel>() {

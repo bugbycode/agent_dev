@@ -75,11 +75,13 @@ public class AgentServer implements Runnable {
 		boss = new NioEventLoopGroup();
 		worker = new NioEventLoopGroup();
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
+		.option(ChannelOption.SO_REUSEADDR, true)
 		.option(ChannelOption.SO_BACKLOG, soBacklog)
 		.option(ChannelOption.TCP_NODELAY, true)
 		.option(ChannelOption.SO_KEEPALIVE, true)
 		.childOption(ChannelOption.TCP_NODELAY, true)
 		.childOption(ChannelOption.SO_KEEPALIVE, true)
+		.childOption(ChannelOption.SO_REUSEADDR, true)
 		.childHandler(new ChannelInitializer<SocketChannel>() {
 
 			@Override

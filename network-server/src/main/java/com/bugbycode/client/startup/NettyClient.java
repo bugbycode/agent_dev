@@ -64,6 +64,7 @@ public class NettyClient {
 		this.bs.group(workGroup).channel(NioSocketChannel.class);
 		this.bs.option(ChannelOption.TCP_NODELAY, true);
 		this.bs.option(ChannelOption.SO_KEEPALIVE, true);
+		this.bs.option(ChannelOption.SO_REUSEADDR, true);
 		this.bs.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
