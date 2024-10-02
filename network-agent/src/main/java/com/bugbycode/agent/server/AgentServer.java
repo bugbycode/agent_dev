@@ -30,6 +30,8 @@ public class AgentServer implements Runnable {
 
 	private int agentPort = 0;
 	
+	private int soBacklog;
+	
 	private EventLoopGroup boss;
 	
 	private EventLoopGroup worker;
@@ -48,13 +50,16 @@ public class AgentServer implements Runnable {
 	
 	private WorkTaskPool workTaskPool;
 	
-	public AgentServer(int agentPort,Map<String,AgentHandler> agentHandlerMap,
+	public AgentServer(int agentPort,
+			int soBacklog,
+			Map<String,AgentHandler> agentHandlerMap,
 			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
 			HostMapper hostMapper,TestnetService testnetService,
 			WorkTaskPool workTaskPool) {
 		this.agentPort = agentPort;
+		this.soBacklog = soBacklog;
 		this.agentHandlerMap = agentHandlerMap;
 		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
@@ -70,6 +75,7 @@ public class AgentServer implements Runnable {
 		boss = new NioEventLoopGroup();
 		worker = new NioEventLoopGroup();
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
+		.option(ChannelOption.SO_BACKLOG, soBacklog)
 		.option(ChannelOption.TCP_NODELAY, true)
 		.option(ChannelOption.SO_KEEPALIVE, true)
 		.childOption(ChannelOption.TCP_NODELAY, true)
@@ -90,7 +96,7 @@ public class AgentServer implements Runnable {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					logger.info("Agent server startup successfully, port " + agentPort + "......");
+					logger.info("Agent server startup successfully, port " + agentPort + ", soBacklog " + soBacklog + " ......");
 				} else {
 					future.cause().printStackTrace();
 					logger.info("Agent server startup failed, port " + agentPort + "......");

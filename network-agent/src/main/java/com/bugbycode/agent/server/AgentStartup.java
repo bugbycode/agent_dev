@@ -47,6 +47,9 @@ public class AgentStartup implements ApplicationRunner {
 	@Value("${spring.netty.agent.port}")
 	private int agentPort;
 	
+	@Value("${spring.netty.agent.so_backlog}")
+	private int soBacklog;
+	
 	@Autowired
 	private TableMapper tableMapper;
 	
@@ -71,7 +74,7 @@ public class AgentStartup implements ApplicationRunner {
 		
 		new WorkTread(startup).start();
 		
-		AgentServer server = new AgentServer(agentPort, agentHandlerMap,forwardHandlerMap,nettyClientMap,
+		AgentServer server = new AgentServer(agentPort, soBacklog, agentHandlerMap,forwardHandlerMap,nettyClientMap,
 				startup,hostMapper,testnetService,workTaskPool);
 		new Thread(server).start();
 	}
