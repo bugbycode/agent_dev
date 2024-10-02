@@ -1,6 +1,7 @@
 package com.bugbycode.agent.server;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.config.HandlerConst;
+import com.bugbycode.config.IdleConfig;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.service.testnet.TestnetService;
@@ -23,6 +25,7 @@ import io.netty.channel.FixedRecvByteBufAllocator;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 
 public class AgentServer implements Runnable {
 	
@@ -87,6 +90,8 @@ public class AgentServer implements Runnable {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
+				ch.pipeline().addLast(new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT,
+						IdleConfig.ALL_IDEL_TIME_OUT, TimeUnit.SECONDS));
 				ch.pipeline().addLast(new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,nettyClientMap,startup,hostMapper,
 						testnetService,workTaskPool));

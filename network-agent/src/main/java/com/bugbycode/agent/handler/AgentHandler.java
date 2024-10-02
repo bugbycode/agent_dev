@@ -21,7 +21,6 @@ import com.bugbycode.webapp.pool.WorkTaskPool;
 import com.bugbycode.webapp.pool.task.host.InsertHostTask;
 import com.bugbycode.webapp.pool.task.host.UpdateForwardTask;
 import com.bugbycode.webapp.pool.task.host.UpdateResultTask;
-import com.bugbycode.webapp.pool.task.testnet.TestNetConnectTask;
 import com.util.RandomUtil;
 import com.util.StringUtil;
 
@@ -29,6 +28,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
@@ -49,6 +50,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	private boolean firstConnect = false;
 	
 	private boolean isForward = false;
+	
+	private int loss_connect_time = 0;
 	
 	private Protocol protocol = Protocol.HTTP;
 	
@@ -88,6 +91,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
+		
+		this.loss_connect_time = 0;
 		
 		if(this.firstConnect) {
 
@@ -303,6 +308,24 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 	}
 	
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+            if (event.state() == IdleState.READER_IDLE) {
+            	this.loss_connect_time++;
+            	if(this.loss_connect_time > 1) {
+                    logger.info("No data was received for a while, the connection is about to close.");
+                	ctx.close();
+            	}
+            } else if (event.state() == IdleState.WRITER_IDLE) {
+                // 写空闲，可以选择发送心跳包等
+            }
+        } else {
+            super.userEventTriggered(ctx, evt);
+        }
+	}
+
 	public synchronized void sendMessage(Message msg) {
 		queue.addLast(msg);
 		notifyTask();
@@ -319,6 +342,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				throw new InterruptedException("Connetion closed.");
 			}
 		}
+		
+		this.loss_connect_time = 0;
+		
 		return queue.removeFirst();
 	}
 	
