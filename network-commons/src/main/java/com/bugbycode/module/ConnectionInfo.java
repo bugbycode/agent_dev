@@ -41,7 +41,7 @@ public class ConnectionInfo implements Serializable{
 
 	@Override
 	public String toString() {
-		return "ConnectionInfo [host=" + host + ", port=" + port + "]";
+		return host + ":" + port;
 	}
 	
 }
