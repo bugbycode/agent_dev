@@ -38,15 +38,11 @@ public class NettyClient {
 	
 	private Map<String,AgentHandler> agentHandlerMap;
 	
-	private String host = "";
-	
-	private int port;
-	
-	private Message msg;
-	
 	private String token = "";
 	
 	private Channel clientChannel;
+	
+	private ConnectionInfo conn;
 	
 	private ThreadLocal<Integer> loss_connect_time = ThreadLocal.withInitial(() -> 0);
 	
@@ -58,14 +54,10 @@ public class NettyClient {
 		this.nettyClientMap.put(msg.getToken(), this);
 		this.agentHandlerMap = agentHandlerMap;
 		this.token = msg.getToken();
-		this.msg = msg;
+		conn = (ConnectionInfo) msg.getData();
 	}
 	
 	public void connection() {
-		
-		ConnectionInfo conn = (ConnectionInfo) msg.getData();
-		host = conn.getHost();
-		port = conn.getPort();
 		
 		this.bs.group(workGroup).channel(NioSocketChannel.class);
 		this.bs.option(ChannelOption.SO_REUSEADDR, true);
@@ -80,17 +72,17 @@ public class NettyClient {
 			}
 		});
 		
-		this.bs.connect(host, port).addListener(new ChannelFutureListener() {
+		this.bs.connect(conn.getHost(), conn.getPort()).addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
-					logger.info("Connection to " + host + ":" + port + " successfully.");
+					logger.info("Connection to " + conn + " successfully.");
 					message.setType(MessageType.CONNECTION_SUCCESS);
 					clientChannel = future.channel();
 				}else {
 					nettyClientMap.remove(token);
-					logger.info("Connection to " + host + ":" + port + " failed.");
+					logger.info("Connection to " + conn + " failed.");
 					message.setType(MessageType.CONNECTION_ERROR);
 				}
 				AgentHandler handler = agentHandlerMap.get(token);
@@ -125,7 +117,7 @@ public class NettyClient {
 		
 		nettyClientMap.remove(token);
 		
-		logger.info("Disconnection to " + host + ":" + port + ".");
+		logger.info("Disconnection to " + conn + ".");
 		
 		workGroup.shutdownGracefully();
 	}
@@ -140,5 +132,10 @@ public class NettyClient {
 	
 	public void addLossConnectTime() {
 		this.loss_connect_time.set(this.loss_connect_time.get() + 1);
+	}
+
+	@Override
+	public String toString() {
+		return conn.toString();
 	}
 }

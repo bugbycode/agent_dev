@@ -67,7 +67,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
             if (event.state() == IdleState.READER_IDLE) {
             	this.client.addLossConnectTime();
             	if(this.client.getLossConnectTime() > 1) {
-                    logger.info("No data was received for a while, the connection is about to close.");
+                    //logger.info("No data was received for a while, the connection is about to close.");
                 	ctx.close();
             	}
             } else if (event.state() == IdleState.WRITER_IDLE) {
