@@ -95,8 +95,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			this.protocol = Protocol.resolve(data[0]);
 			
 			if(this.protocol == Protocol.SOCKET_4) {//socket4
-
-				this.protocol = Protocol.HTTPS;
 				
 				// |VN|CD|DSTPORT|DSTIP|USERID|NULL|
 				port = (data[2] << 0x08) &0xFF00 | data[3] & 0xFF;
@@ -193,7 +191,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 				client.writeAndFlush(data);
 			}
-		} else if(this.protocol == Protocol.SOCKET_5) { // socket5
+		} else if(this.protocol == Protocol.SOCKET_5 && (StringUtil.isBlank(host) || port == 0)) { // socket5
 			byte ver = data[0];
 			byte cmd = data[1];
 			//byte rsv = data[2];
@@ -235,8 +233,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			}
 			
 			port = (data[data.length - 2] << 0x08) & 0xFF00 | data[data.length - 1] & 0xFF;
-			
-			this.protocol = Protocol.HTTPS;
 			
 			Message message = connection(host, port, ctx);
 			
@@ -408,6 +404,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					hostModule.setForward(1);
 				}
 				
+			} else if(protocol == Protocol.SOCKET_4 || protocol == Protocol.SOCKET_5) {
+				//socket5 or socket5 default forward
+				hostModule.setForward(1);
 			}
 			
 			workTaskPool.add(new InsertHostTask(hostMapper, hostModule));
