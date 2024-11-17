@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.config.HandlerConst;
 import com.bugbycode.config.IdleConfig;
+import com.bugbycode.exception.AgentException;
 import com.bugbycode.forward.handler.ClientHandler;
 import com.bugbycode.handler.MessageDecoder;
 import com.bugbycode.handler.MessageEncoder;
@@ -112,7 +113,7 @@ public class StartupRunnable implements Runnable {
 		if(isOpen()) {
 			this.clientChannel.writeAndFlush(msg);
 		}else {
-			throw new RuntimeException("Unconnected forward server");
+			throw new AgentException("Unconnected forward server");
 		}
 	}
 	

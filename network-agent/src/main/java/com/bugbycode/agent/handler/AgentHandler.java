@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.exception.AgentException;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.module.ConnectionInfo;
@@ -163,7 +164,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 							port = Integer.valueOf(serverArr[2]);
 							host = serverArr[1].trim();
 						}else {
-							throw new RuntimeException("Host error.");
+							throw new AgentException("Host error.");
 						}
 					}else if(dataStr.startsWith("Proxy-Connection:")) {
 						dataStr = dataStr.replace("Proxy-Connection:", "Connection:");
@@ -187,7 +188,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			}else {
 				NettyClient client = nettyClientMap.get(token);
 				if(client == null) {
-					throw new RuntimeException("token error.");
+					throw new AgentException("token error.");
 				}
 				client.writeAndFlush(data);
 			}
@@ -252,7 +253,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			}else {
 				NettyClient client = nettyClientMap.get(token);
 				if(client == null) {
-					throw new RuntimeException("token error.");
+					throw new AgentException("token error.");
 				}
 				client.writeAndFlush(data);
 			}
@@ -286,12 +287,12 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		notifyTask();
-		String error = cause.getMessage();
-		if(StringUtil.isBlank(error)) {
-			cause.printStackTrace();
+		if(cause instanceof AgentException) {
+			logger.info(cause.getMessage());
+		} else {
+			logger.error(cause.getMessage(), cause);
 		}
-		logger.error(error);
+		notifyTask();
 		if(ctx != null) {
 			ctx.channel().close();
 			ctx.close();
@@ -376,7 +377,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		host = host.trim();
 		
 		if(StringUtil.isBlank(host) || port == 0) {
-			throw new RuntimeException("Protocol error.");
+			throw new AgentException("Protocol error.");
 		}
 		
 		ConnectionInfo con = new ConnectionInfo(host, port);
@@ -425,7 +426,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 				
-				throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+				throw new AgentException("Connection to " + host + ":" + port + " failed.");
 				
 			} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 				
@@ -447,7 +448,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
-					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+					throw new AgentException("Connection to " + host + ":" + port + " failed.");
 				}
 				
 				forwardHandlerMap.put(token, this);
@@ -460,7 +461,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
-					throw new RuntimeException("Connection to " + host + ":" + port + " failed.");
+					throw new AgentException("Connection to " + host + ":" + port + " failed.");
 					
 				} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 					
