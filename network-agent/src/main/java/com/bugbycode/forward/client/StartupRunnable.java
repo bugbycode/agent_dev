@@ -94,7 +94,7 @@ public class StartupRunnable implements Runnable {
 					clientChannel = future.channel();
 					logger.info("Connection to " + host + ":" + port + " success...");
 				} else{
-					logger.error("Connection to " + host + ":" + port + " failed...");
+					logger.info("Connection to " + host + ":" + port + " failed...");
 				}
 				starting = false;
 			}
