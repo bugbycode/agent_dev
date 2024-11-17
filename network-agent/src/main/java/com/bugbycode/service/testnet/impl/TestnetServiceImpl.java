@@ -33,7 +33,7 @@ public class TestnetServiceImpl implements TestnetService {
 		} catch (URISyntaxException e) {
 			logger.error(e.getLocalizedMessage());
 		}
-		return status;
+		return status == null ? HttpStatus.OK : status;
 	}
 
 	@Override
