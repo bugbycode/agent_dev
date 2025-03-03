@@ -14,12 +14,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3</version>
+		<version>3.4.3</version>
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<tomcat.version>11.0.2</tomcat.version>
+		<tomcat.version>11.0.4</tomcat.version>
 	</properties>
 
 	<dependencies>
