@@ -78,12 +78,12 @@ public class NettyClient {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
-					logger.info("Connection to " + conn + " successfully.");
+					logger.debug("Connection to " + conn + " successfully.");
 					message.setType(MessageType.CONNECTION_SUCCESS);
 					serverChannel.writeAndFlush(message);
 					clientChannel = future.channel();
 				}else {
-					logger.info("Connection to " + conn + " failed.");
+					logger.debug("Connection to " + conn + " failed.");
 					message.setType(MessageType.CONNECTION_ERROR);
 					serverChannel.writeAndFlush(message);
 					nettyClientMap.remove(token);
@@ -113,7 +113,7 @@ public class NettyClient {
 			clientChannel.close();
 		}
 		
-		logger.info("Disconnection to " + conn + ".");
+		logger.debug("Disconnection to " + conn + ".");
 		
 		workGroup.shutdownGracefully();
 	}

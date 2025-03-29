@@ -34,13 +34,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		logger.info("Agent connection.");
+		logger.info("Client connected.");
 	}
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		ctx.close();
-		logger.info("Agent connection closed.");
+		logger.info("Client disconnected.");
 		List<NettyClient> list = new ArrayList<NettyClient>();
 		for(Entry<String, NettyClient> entry : nettyClientMap.entrySet()) {
 			NettyClient client = entry.getValue();
@@ -54,7 +54,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 		
 		nettyClientMap.clear();
 		
-		logger.info("Close a total of " + list.size() + " connections.");
+		logger.debug("Close a total of " + list.size() + " connections.");
 	}
 	
 	@Override
