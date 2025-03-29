@@ -430,7 +430,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 			} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 				
-				logger.info("Connection to " + host + ":" + port + " successfully.");
+				logger.info("Connection to " + host + ":" + port + " success.");
 				
 			}
 			
@@ -465,7 +465,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 				} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 					
-					logger.info("Connection to " + host + ":" + port + " successfully.");
+					logger.info("Connection to " + host + ":" + port + " success.");
 					
 				}
 				

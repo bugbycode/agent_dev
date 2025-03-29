@@ -98,7 +98,7 @@ public class AgentServer implements Runnable {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					logger.info("Agent server startup successfully, port " + agentPort + ", soBacklog " + soBacklog + " ......");
+					logger.info("Agent server startup success, port " + agentPort + ", soBacklog " + soBacklog + " ......");
 				} else {
 					future.cause().printStackTrace();
 					logger.info("Agent server startup failed, port " + agentPort + "......");
