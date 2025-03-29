@@ -56,7 +56,7 @@ public class StartupRunnable implements Runnable {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					logger.info("Proxy server startup successfully, port " + serverPort + "......");
+					logger.info("Proxy server startup success, port " + serverPort + "......");
 				} else {
 					logger.info("Proxy server startup failed, port " + serverPort + "......");
 					close();

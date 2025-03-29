@@ -78,7 +78,7 @@ public class NettyClient {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
-					logger.debug("Connection to " + conn + " successfully.");
+					logger.debug("Connection to " + conn + " success.");
 					message.setType(MessageType.CONNECTION_SUCCESS);
 					serverChannel.writeAndFlush(message);
 					clientChannel = future.channel();
