@@ -163,6 +163,8 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					buff.writeBytes(data);
 					channel.writeAndFlush(buff);
 					
+					loss_connect_time = 0;
+					
 					logger.debug(StringUtil.byteToHexString(data, data.length));
 					
 				} catch (InterruptedException e) {
