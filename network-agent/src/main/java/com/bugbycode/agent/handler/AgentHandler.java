@@ -29,6 +29,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
@@ -41,6 +43,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	private Map<String,AgentHandler> forwardHandlerMap;
 	
 	private Map<String,NettyClient> nettyClientMap;
+	
+	private int loss_connect_time = 0;
 	
 	private int port = 0;
 	
@@ -86,6 +90,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+		
+		loss_connect_time = 0;
+		
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
 		
@@ -296,6 +303,24 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		if(ctx != null) {
 			ctx.channel().close();
 			ctx.close();
+		}
+	}
+	
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if (evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			if (event.state() == IdleState.READER_IDLE) {
+				loss_connect_time++;
+				if (loss_connect_time > 3) {
+					logger.info("Channel timeout.");
+					ctx.channel().close();
+				}
+			} else if (event.state() == IdleState.WRITER_IDLE) {
+				Message msg = new Message();
+				msg.setType(MessageType.HEARTBEAT);
+				ctx.channel().writeAndFlush(msg);
+			}
 		}
 	}
 
