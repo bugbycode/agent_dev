@@ -376,6 +376,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					ByteBuf buff = channel.alloc().buffer(data.length);
 					buff.writeBytes(data);
 					channel.writeAndFlush(buff);
+					
+					loss_connect_time = 0;
+					
 				} catch (InterruptedException e) {
 					logger.debug(e.getMessage());
 				}
