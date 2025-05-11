@@ -1,0 +1,10 @@
+spring:
+  main:
+    web-application-type: NONE
+  netty:
+    forwardPort: 36500 #代理端口
+    host: www.example.com #目标地址
+    port: 36500 #目标端口
+    so_backlog: 4096
+loggin:
+  config: classpath:log4j2.xml
