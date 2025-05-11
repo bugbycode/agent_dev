@@ -3,6 +3,7 @@ package com.bugbycode.forward.server;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.bugbycode.config.IdleConfig;
 import com.bugbycode.forward.handler.ForwardHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -14,6 +15,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 
 public class ForwardServer implements Runnable {
 
@@ -55,7 +57,9 @@ public class ForwardServer implements Runnable {
 
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new ForwardHandler(host, port));
+				ch.pipeline().addLast(
+						new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT, IdleConfig.ALL_IDEL_TIME_OUT),
+						new ForwardHandler(host, port));
 			}
 			
 		});
