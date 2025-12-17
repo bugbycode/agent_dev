@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.config.IdleConfig;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
@@ -111,7 +112,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 			IdleStateEvent event = (IdleStateEvent) evt;
 			if (event.state() == IdleState.READER_IDLE) {
 				loss_connect_time++;
-				if (loss_connect_time > 3) {
+				if (loss_connect_time > IdleConfig.LOSS_CONNECT_TIME_COUNT) {
 					logger.info("Channel timeout.");
 					ctx.channel().close();
 				}
