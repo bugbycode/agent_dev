@@ -1,7 +1,7 @@
 package com.bugbycode.config;
 
 public class IdleConfig {
-	  public static final int READ_IDEL_TIME_OUT = 10; // 读超时
-	  public static final int WRITE_IDEL_TIME_OUT = 10;// 写超时
-	  public static final int ALL_IDEL_TIME_OUT = 0; // 所有超时
+	  public static final int READ_IDEL_TIME_OUT = 20; // 读超时
+	  public static final int WRITE_IDEL_TIME_OUT = 20;// 写超时
+	  public static final int ALL_IDEL_TIME_OUT = 60; // 所有超时
 }
