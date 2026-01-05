@@ -13,8 +13,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 
 public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
@@ -38,7 +36,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-		this.client.resetLossConnectTime();
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
 		Message message = new Message(token, MessageType.TRANSFER_DATA, data);
@@ -59,22 +56,4 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		logger.error(cause.getMessage());
 		ctx.close();
     }
-	
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		if (evt instanceof IdleStateEvent) {
-            IdleStateEvent event = (IdleStateEvent) evt;
-            if (event.state() == IdleState.READER_IDLE) {
-            	this.client.addLossConnectTime();
-            	if(this.client.getLossConnectTime() > 1) {
-                    //logger.info("No data was received for a while, the connection is about to close.");
-                	ctx.close();
-            	}
-            } else if (event.state() == IdleState.WRITER_IDLE) {
-                // 写空闲，可以选择发送心跳包等
-            }
-        } else {
-            super.userEventTriggered(ctx, evt);
-        }
-	}
 }

@@ -42,8 +42,6 @@ public class NettyClient {
 	private Map<String,NettyClient> nettyClientMap;
 	
 	private ConnectionInfo conn;
-
-	private ThreadLocal<Integer> loss_connect_time = ThreadLocal.withInitial(() -> 0);
 	
 	public NettyClient(Message msg, Channel serverChannel,
 			Map<String,NettyClient> nettyClientMap) {
@@ -94,7 +92,6 @@ public class NettyClient {
 	}
 	
 	public void writeAndFlush(byte[] data) {
-		this.resetLossConnectTime();
 		ByteBuf buff = clientChannel.alloc().buffer(data.length);
 		buff.writeBytes(data);
 		clientChannel.writeAndFlush(buff);
@@ -118,18 +115,6 @@ public class NettyClient {
 		workGroup.shutdownGracefully();
 	}
 	
-	public void resetLossConnectTime() {
-		this.loss_connect_time.set(0);
-	}
-	
-	public int getLossConnectTime() {
-		return this.loss_connect_time.get();
-	}
-	
-	public void addLossConnectTime() {
-		this.loss_connect_time.set(this.loss_connect_time.get() + 1);
-	}
-
 	@Override
 	public String toString() {
 		return conn.toString();

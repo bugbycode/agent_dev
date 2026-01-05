@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
-import com.bugbycode.config.IdleConfig;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
 import com.util.StringUtil;
@@ -15,8 +14,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.timeout.IdleState;
-import io.netty.handler.timeout.IdleStateEvent;
 
 public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
@@ -31,8 +28,6 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	private boolean isClosed;
 	
 	private boolean firstConnect = false;
-	
-	private int loss_connect_time = 0;
 	
 	public ForwardHandler(String host, int port) {
 		this.queue = new LinkedList<Message>();
@@ -67,7 +62,6 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
-		loss_connect_time = 0;
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
 
@@ -85,24 +79,6 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 		
 		this.client.writeAndFlush(data);
-	}
-	
-	@Override
-	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-		if (evt instanceof IdleStateEvent) {
-			IdleStateEvent event = (IdleStateEvent) evt;
-			if (event.state() == IdleState.READER_IDLE) {
-				loss_connect_time++;
-				if (loss_connect_time > IdleConfig.LOSS_CONNECT_TIME_COUNT) {
-					logger.info("Channel timeout.");
-					ctx.channel().close();
-				}
-			} else if (event.state() == IdleState.WRITER_IDLE) {
-				Message msg = new Message();
-				msg.setType(MessageType.HEARTBEAT);
-				ctx.channel().writeAndFlush(msg);
-			}
-		}
 	}
 	
 	public void close() {
@@ -163,8 +139,6 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					ByteBuf buff = channel.alloc().buffer(data.length);
 					buff.writeBytes(data);
 					channel.writeAndFlush(buff);
-					
-					loss_connect_time = 0;
 					
 					logger.debug(StringUtil.byteToHexString(data, data.length));
 					
