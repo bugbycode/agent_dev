@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.config.IdleConfig;
 import com.bugbycode.exception.AgentException;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
@@ -311,7 +312,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private synchronized Message read() throws InterruptedException {
 		while(queue.isEmpty()) {
-			wait();
+			wait(IdleConfig.ALL_IDEL_TIME_OUT * 1000);
 			if(isClosed) {
 				throw new InterruptedException("Connetion closed.");
 			}
