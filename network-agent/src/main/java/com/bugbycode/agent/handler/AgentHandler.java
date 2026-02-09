@@ -301,7 +301,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			ctx.close();
 		}
 		this.isClosed = true;
-		notifyTask();
 	}
 	
 	public synchronized void sendMessage(Message msg) {
