@@ -1,5 +1,6 @@
 package com.bugbycode.agent.handler;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Date;
 import java.util.LinkedList;
@@ -292,6 +293,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		if(cause instanceof AgentException) {
 			logger.info(cause.getMessage());
+		} else if(cause instanceof IOException) {
+			logger.error(cause.getMessage());
 		} else {
 			logger.error(cause.getMessage(), cause);
 		}
