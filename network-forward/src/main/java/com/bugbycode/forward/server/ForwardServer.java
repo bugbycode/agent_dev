@@ -12,7 +12,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -43,8 +44,8 @@ public class ForwardServer implements Runnable {
 	@Override
 	public void run() {
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		boss = new NioEventLoopGroup();
-		worker = new NioEventLoopGroup();
+		boss = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+		worker = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
 		.option(ChannelOption.SO_REUSEADDR, true)
 		.option(ChannelOption.SO_BACKLOG, soBacklog)
