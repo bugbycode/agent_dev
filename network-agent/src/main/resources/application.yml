@@ -8,7 +8,7 @@ spring:
     password: china@
   server:
     datasource:
-      url: jdbc:sqlite:data.db
+      jdbcUrl: jdbc:sqlite:data.db
       driverClassName: org.sqlite.JDBC
   netty: 
     agent: 
