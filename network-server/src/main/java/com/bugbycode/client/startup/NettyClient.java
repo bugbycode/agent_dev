@@ -20,7 +20,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -49,7 +50,7 @@ public class NettyClient {
 		this.token = msg.getToken();
 		this.serverChannel = serverChannel;
 		this.conn = (ConnectionInfo) msg.getData();
-		this.workGroup = new NioEventLoopGroup();
+		this.workGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		this.nettyClientMap = nettyClientMap;
 		synchronized (this.nettyClientMap) {
 			this.nettyClientMap.put(token, this);
@@ -76,12 +77,12 @@ public class NettyClient {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				Message message = new Message(token, MessageType.CONNECTION_SUCCESS, null);
 				if(future.isSuccess()) {
-					logger.debug("Connection to " + conn + " success.");
+					logger.debug("Connection " + conn + " success.");
 					message.setType(MessageType.CONNECTION_SUCCESS);
 					serverChannel.writeAndFlush(message);
 					clientChannel = future.channel();
 				}else {
-					logger.debug("Connection to " + conn + " failed.");
+					logger.debug("Connection " + conn + " failed.");
 					message.setType(MessageType.CONNECTION_ERROR);
 					serverChannel.writeAndFlush(message);
 					nettyClientMap.remove(token);
@@ -110,7 +111,7 @@ public class NettyClient {
 			clientChannel.close();
 		}
 		
-		logger.debug("Disconnection to " + conn + ".");
+		logger.debug("Disconnection " + conn + ".");
 		
 		workGroup.shutdownGracefully();
 	}

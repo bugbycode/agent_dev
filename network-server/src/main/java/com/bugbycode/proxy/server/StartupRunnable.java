@@ -10,7 +10,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class StartupRunnable implements Runnable {
@@ -37,8 +38,8 @@ public class StartupRunnable implements Runnable {
 	public void run() {
 		
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		boss = new NioEventLoopGroup();
-		worker = new NioEventLoopGroup();
+		boss = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+		worker = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
 				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 				.option(ChannelOption.TCP_NODELAY, true)
