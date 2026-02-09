@@ -1,6 +1,6 @@
 # agent_dev
 
-这是一个使用netty实现网络代理的简单示例，本项目仅供学习研究使用。客户端与服务端启用了双向认证，并且使用RSA加密代理通道，需要使用者自己签发证书。
+这是一个使用netty实现网络代理的简单示例。客户端与服务端启用了双向认证，并且使用RSA加密代理通道，需要使用者自己签发证书。
 
 # 项目编译
 
@@ -78,7 +78,7 @@ spring:
     password: china@
   server:
     datasource:
-      url: jdbc:sqlite:data.db
+      jdbcUrl: jdbc:sqlite:data.db
       driverClassName: org.sqlite.JDBC
   netty: 
     agent: 
