@@ -88,8 +88,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
 		
-		notifyTask();
-		
 		byte[] data = new byte[msg.readableBytes()];
 		msg.readBytes(data);
 		
