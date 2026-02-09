@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
   <properties>
-      <property name="LOG_HOME">logs/server</property>
+      <property name="LOG_HOME">logs</property>
   </properties>
   <Appenders>
   	<!-- 控制台输出所有日志 -->
