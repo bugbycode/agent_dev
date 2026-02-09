@@ -23,7 +23,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslHandler;
@@ -45,12 +45,12 @@ public class StartupRunnable implements Runnable {
 	
 	private Channel clientChannel;
 	
-	private NioEventLoopGroup remoteGroup;
+	private EventLoopGroup remoteGroup;
 	
 	private boolean starting = false;
 	
 	public StartupRunnable(String host, int port,String keyStorePath,String keyStorePassword,
-			Map<String,AgentHandler> agentHandlerMap,NioEventLoopGroup remoteGroup) {
+			Map<String,AgentHandler> agentHandlerMap,EventLoopGroup remoteGroup) {
 		this.host = host;
 		this.port = port;
 		this.keyStorePath = keyStorePath;
@@ -92,9 +92,9 @@ public class StartupRunnable implements Runnable {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					clientChannel = future.channel();
-					logger.info("Connection to " + host + ":" + port + " success...");
+					logger.info("Connection " + host + ":" + port + " success...");
 				} else{
-					logger.info("Connection to " + host + ":" + port + " failed...");
+					logger.info("Connection " + host + ":" + port + " failed...");
 				}
 				starting = false;
 			}

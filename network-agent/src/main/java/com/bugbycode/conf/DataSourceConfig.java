@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-
-import jakarta.annotation.Resource;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
 @Configuration
+@EnableJdbcRepositories
 @MapperScan(basePackages = "com.bugbycode.mapper",sqlSessionFactoryRef = "sqlSessionFactory")
 public class DataSourceConfig {
 
@@ -26,7 +26,6 @@ public class DataSourceConfig {
 	}
 	
 	@Bean("sqlSessionFactory")
-	@Resource(name="dataSource")
 	public SqlSessionFactory getSqlSessionFactory(DataSource dataSource) throws Exception {
 		ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		SqlSessionFactoryBean sf = new SqlSessionFactoryBean();

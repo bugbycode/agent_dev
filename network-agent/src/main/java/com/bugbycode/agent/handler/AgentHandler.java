@@ -274,7 +274,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		if(isForward) {
 			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 			startup.writeAndFlush(message);
-			logger.info("Disconnection to " + host + ":" + port + ".");
+			logger.info("Disconnection " + host + ":" + port + ".");
 		}
 		forwardHandlerMap.remove(token);
 		this.isClosed = true;
@@ -429,11 +429,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 				
-				throw new AgentException("Connection to " + host + ":" + port + " failed.");
+				throw new AgentException("Connection " + host + ":" + port + " failed.");
 				
 			} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 				
-				logger.info("Connection to " + host + ":" + port + " success.");
+				logger.info("Connection " + host + ":" + port + " success.");
 				
 			}
 			
@@ -451,7 +451,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
-					throw new AgentException("Connection to " + host + ":" + port + " failed.");
+					throw new AgentException("Connection " + host + ":" + port + " failed.");
 				}
 				
 				forwardHandlerMap.put(token, this);
@@ -464,11 +464,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 					
 					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
 					
-					throw new AgentException("Connection to " + host + ":" + port + " failed.");
+					throw new AgentException("Connection " + host + ":" + port + " failed.");
 					
 				} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 					
-					logger.info("Connection to " + host + ":" + port + " success.");
+					logger.info("Connection " + host + ":" + port + " success.");
 					
 				}
 				

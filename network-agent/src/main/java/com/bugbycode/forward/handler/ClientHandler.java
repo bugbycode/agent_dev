@@ -28,7 +28,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		logger.info("Connection to server success.");
+		logger.info("Connection server success.");
 	}
 
 	@Override

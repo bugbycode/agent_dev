@@ -1,6 +1,7 @@
 package com.bugbycode.conf;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -18,9 +20,11 @@ import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 @Configuration
@@ -49,8 +53,8 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public NioEventLoopGroup remoteGroup() {
-		return new NioEventLoopGroup();
+	public EventLoopGroup remoteGroup() {
+		return new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 	}
 	
 	@Bean
@@ -72,16 +76,14 @@ public class AppConfig {
 		
 		private final Logger logger = LogManager.getLogger(HttpResponseErrorHandler.class);
 		
-		@SuppressWarnings("null")
 		@Override
 		public boolean hasError(ClientHttpResponse response) throws IOException {
 			return response.getStatusCode().value() == HttpStatus.Series.CLIENT_ERROR.value() 
 		               || response.getStatusCode().value() == HttpStatus.Series.SERVER_ERROR.value();
 		}
 		
-		@SuppressWarnings("null")
 		@Override
-		public void handleError(ClientHttpResponse response) throws IOException {
+		public void handleError(URI url, HttpMethod method, ClientHttpResponse response) throws IOException {
 			logger.error("Error response received with status code: " + response.getStatusCode());
 		}
 	}

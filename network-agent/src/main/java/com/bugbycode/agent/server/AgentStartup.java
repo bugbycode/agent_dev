@@ -17,7 +17,7 @@ import com.bugbycode.mapper.table.TableMapper;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
 
 @Component
 @Configuration
@@ -57,7 +57,7 @@ public class AgentStartup implements ApplicationRunner {
 	private HostMapper hostMapper;
 	
 	@Autowired
-	private NioEventLoopGroup remoteGroup;
+	private EventLoopGroup remoteGroup;
 	
 	@Autowired
 	private TestnetService testnetService;
