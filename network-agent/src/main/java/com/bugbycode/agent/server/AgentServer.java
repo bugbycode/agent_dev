@@ -13,6 +13,7 @@ import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
+import com.util.ProxyUtil;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -104,6 +105,7 @@ public class AgentServer implements Runnable {
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					logger.info("Agent server startup success, port " + agentPort + ", soBacklog " + soBacklog + " ......");
+					ProxyUtil.setProxy("localhost", agentPort);
 				} else {
 					future.cause().printStackTrace();
 					logger.info("Agent server startup failed, port " + agentPort + "......");
