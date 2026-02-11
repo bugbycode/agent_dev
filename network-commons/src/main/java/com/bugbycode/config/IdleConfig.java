@@ -4,4 +4,5 @@ public class IdleConfig {
 	  public static final int READ_IDEL_TIME_OUT = 20; // 读超时
 	  public static final int WRITE_IDEL_TIME_OUT = 20;// 写超时
 	  public static final int ALL_IDEL_TIME_OUT = 60; // 所有超时
+	  public static final int LOSS_CONNECT_TIME_COUNT = 3;//超时次数
 }
