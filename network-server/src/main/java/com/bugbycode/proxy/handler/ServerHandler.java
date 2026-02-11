@@ -40,7 +40,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		loss_connect_time = 0;
 		ctx.close();
 		logger.info("Client disconnected.");
 		List<NettyClient> list = new ArrayList<NettyClient>();
@@ -61,6 +60,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+		loss_connect_time = 0;
 		Channel channel = ctx.channel();
 		Message message = (Message)msg;
 		MessageType type = message.getType();
