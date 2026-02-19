@@ -16,6 +16,7 @@ import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.mapper.table.TableMapper;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
+import com.util.ProxyUtil;
 
 import io.netty.channel.EventLoopGroup;
 
@@ -77,6 +78,9 @@ public class AgentStartup implements ApplicationRunner {
 		AgentServer server = new AgentServer(agentPort, soBacklog, agentHandlerMap,forwardHandlerMap,nettyClientMap,
 				startup,hostMapper,testnetService,workTaskPool);
 		new Thread(server).start();
+		
+		ProxyUtil.setProxy("localhost", agentPort);
+		
 	}
 
 	private class WorkTread extends Thread{
