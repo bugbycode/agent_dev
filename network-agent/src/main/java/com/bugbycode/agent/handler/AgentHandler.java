@@ -309,7 +309,7 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent) {
 			IdleStateEvent event = (IdleStateEvent) evt;
-			if(event.state() == IdleState.READER_IDLE) {//通信超时
+			if(event.state() == IdleState.ALL_IDLE) {//通信超时
 				ctx.close();
 				logger.debug("Channel timeout.");
 			}

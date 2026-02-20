@@ -91,7 +91,7 @@ public class AgentServer implements Runnable {
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.config().setRecvByteBufAllocator(new FixedRecvByteBufAllocator(HandlerConst.MAX_FRAME_LENGTH));
 				ch.pipeline().addLast(
-						new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT, IdleConfig.ALL_IDEL_TIME_OUT),
+						new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT, IdleConfig.ALL_IDEL_TIME_OUT * 3),
 						new AgentHandler(agentHandlerMap,
 						forwardHandlerMap,nettyClientMap,startup,hostMapper,
 						testnetService,workTaskPool));
