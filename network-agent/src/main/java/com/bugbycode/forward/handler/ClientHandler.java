@@ -79,6 +79,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				ctx.channel().writeAndFlush(msg);
 			} else if(event.state() == IdleState.ALL_IDLE) {//通信超时
 				ctx.close();
+				logger.error("Channel timeout.");
 			}
 		}
 	}
