@@ -14,6 +14,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
@@ -58,6 +60,17 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		logger.error(cause.getMessage(), cause);
 		ctx.close();
+	}
+	
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if (evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			if(event.state() == IdleState.ALL_IDLE) {//通信超时
+				ctx.close();
+				logger.info("Channel timeout.");
+			}
+		}
 	}
 
 	@Override
