@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.agent.handler.AgentHandler;
-import com.bugbycode.config.IdleConfig;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
@@ -22,8 +21,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	private final Logger logger = LogManager.getLogger(ClientHandler.class);
 	
 	private Map<String,AgentHandler> agentHandlerMap;
-	
-	private int loss_connect_time = 0;
 	
 	public ClientHandler(StartupRunnable startup,Map<String, AgentHandler> agentHandlerMap) {
 		this.agentHandlerMap = agentHandlerMap;
@@ -51,8 +48,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		
-		loss_connect_time = 0;
-		
 		Message message = (Message) msg;
 		String token = message.getToken();
 		MessageType type = message.getType();
@@ -78,13 +73,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent) {
 			IdleStateEvent event = (IdleStateEvent) evt;
-			if (event.state() == IdleState.READER_IDLE) {
-				loss_connect_time++;
-				if (loss_connect_time > IdleConfig.LOSS_CONNECT_TIME_COUNT) {
-					logger.info("Channel timeout.");
-					ctx.channel().close();
-				}
-			} else if (event.state() == IdleState.WRITER_IDLE) {//写超时事件触发时发送心跳通信
+			if (event.state() == IdleState.WRITER_IDLE) {//写超时事件触发时发送心跳通信
 				Message msg = new Message();
 				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
