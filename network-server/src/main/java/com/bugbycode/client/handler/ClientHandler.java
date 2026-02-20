@@ -13,6 +13,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
@@ -56,4 +58,15 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		logger.error(cause.getMessage());
 		ctx.close();
     }
+
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if (evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			if(event.state() == IdleState.ALL_IDLE) {//通信超时
+				ctx.close();
+				logger.debug("Channel timeout.");
+			}
+		}
+	}
 }

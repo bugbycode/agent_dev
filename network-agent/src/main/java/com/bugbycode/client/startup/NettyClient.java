@@ -66,7 +66,7 @@ public class NettyClient {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.pipeline().addLast(new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT,
-						IdleConfig.ALL_IDEL_TIME_OUT, TimeUnit.SECONDS));
+						IdleConfig.ALL_IDEL_TIME_OUT * 3, TimeUnit.SECONDS));
 				ch.pipeline().addLast(new ClientHandler(agentHandlerMap,token,NettyClient.this));
 			}
 		});
