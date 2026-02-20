@@ -77,6 +77,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				Message msg = new Message();
 				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
+			} else if(event.state() == IdleState.ALL_IDLE) {//通信超时
+				ctx.close();
 			}
 		}
 	}
