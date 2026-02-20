@@ -107,13 +107,13 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent) {
 			IdleStateEvent event = (IdleStateEvent) evt;
-			if (event.state() == IdleState.WRITER_IDLE) {//写超时事件触发时发送心跳通信
+			if (event.state() == IdleState.READER_IDLE) {//读取数据超时 自动关闭连接
+				ctx.close();
+				logger.error("Channel timeout.");
+			} else if(event.state() == IdleState.ALL_IDLE) {//没有数据传输的时间间隔 自动发送心跳通信
 				Message msg = new Message();
 				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
-			} else if(event.state() == IdleState.ALL_IDLE) {//通信超时
-				ctx.close();
-				logger.error("Channel timeout.");
 			}
 		}
 	}
