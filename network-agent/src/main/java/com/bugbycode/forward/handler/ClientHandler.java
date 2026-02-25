@@ -77,7 +77,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				Message msg = new Message();
 				msg.setType(MessageType.HEARTBEAT);
 				ctx.channel().writeAndFlush(msg);
-			} else if(event.state() == IdleState.ALL_IDLE) {//没有数据传输的时间间隔 自动关闭连接
+			} else if(event.state() == IdleState.READER_IDLE) {//读超时 未收到任何数据传输时 自动关闭连接
 				ctx.close();
 				logger.error("Channel timeout.");
 			}
