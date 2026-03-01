@@ -47,13 +47,9 @@ public class ForwardServer implements Runnable {
 		boss = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		worker = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-		.option(ChannelOption.SO_REUSEADDR, true)
 		.option(ChannelOption.SO_BACKLOG, soBacklog)
 		.option(ChannelOption.TCP_NODELAY, true)
-		.option(ChannelOption.SO_KEEPALIVE, true)
 		.childOption(ChannelOption.TCP_NODELAY, true)
-		.childOption(ChannelOption.SO_KEEPALIVE, true)
-		.childOption(ChannelOption.SO_REUSEADDR, true)
 		.childHandler(new ChannelInitializer<SocketChannel>() {
 
 			@Override

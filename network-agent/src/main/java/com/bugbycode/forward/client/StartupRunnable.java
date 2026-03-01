@@ -65,8 +65,6 @@ public class StartupRunnable implements Runnable {
 		Bootstrap client = new Bootstrap();
 		client.group(this.remoteGroup).channel(NioSocketChannel.class);
 		client.option(ChannelOption.TCP_NODELAY, true);
-		client.option(ChannelOption.SO_KEEPALIVE, true);
-		client.option(ChannelOption.SO_REUSEADDR, true);
 		client.handler(new ChannelInitializer<SocketChannel>() {
 
 			@Override
