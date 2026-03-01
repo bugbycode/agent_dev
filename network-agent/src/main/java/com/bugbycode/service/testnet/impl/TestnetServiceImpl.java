@@ -24,7 +24,9 @@ public class TestnetServiceImpl implements TestnetService {
 	
 	@Override
 	public HttpStatus testHttp(String url) {
+		
 		HttpStatus status = HttpStatus.REQUEST_TIMEOUT;
+		
 		try {
 			ResponseEntity<String> result = restTemplate.getForEntity(new URI(url), String.class);
 			status = HttpStatus.resolve(result.getStatusCode().value());
@@ -40,8 +42,13 @@ public class TestnetServiceImpl implements TestnetService {
 	public boolean checkHttpConnect(String url) {
 		
 		boolean result = true;
+
+		logger.info("Test [{}]", url);
 		
 		HttpStatus status = testHttp(url);
+		
+		logger.info("Test [{}] -> [{}]", url, status);
+		
 		switch (status) {
 		case FORBIDDEN:
 			result = false;
