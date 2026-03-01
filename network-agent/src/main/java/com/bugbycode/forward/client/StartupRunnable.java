@@ -69,7 +69,6 @@ public class StartupRunnable implements Runnable {
 		client.option(ChannelOption.TCP_NODELAY, true);
 		client.option(ChannelOption.SO_KEEPALIVE, true);
 		client.option(ChannelOption.SO_REUSEADDR, true);
-		client.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, IdleConfig.CONNECT_TIMEOUT_MILLIS);
 		client.handler(new ChannelInitializer<SocketChannel>() {
 
 			@Override
