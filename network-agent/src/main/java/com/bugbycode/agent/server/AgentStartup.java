@@ -18,8 +18,6 @@ import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 import com.util.ProxyUtil;
 
-import io.netty.channel.EventLoopGroup;
-
 @Component
 @Configuration
 public class AgentStartup implements ApplicationRunner {
@@ -58,9 +56,6 @@ public class AgentStartup implements ApplicationRunner {
 	private HostMapper hostMapper;
 	
 	@Autowired
-	private EventLoopGroup remoteGroup;
-	
-	@Autowired
 	private TestnetService testnetService;
 	
 	@Autowired
@@ -71,7 +66,7 @@ public class AgentStartup implements ApplicationRunner {
 		
 		tableMapper.initHostTable();
 		
-		StartupRunnable startup = new StartupRunnable(host, port,keystorePath,keystorePassword,forwardHandlerMap,remoteGroup); 
+		StartupRunnable startup = new StartupRunnable(host, port,keystorePath,keystorePassword,forwardHandlerMap); 
 		
 		new WorkTread(startup).start();
 		

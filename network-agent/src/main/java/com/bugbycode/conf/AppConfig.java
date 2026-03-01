@@ -20,11 +20,8 @@ import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioIoHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 @Configuration
@@ -50,11 +47,6 @@ public class AppConfig {
 	@Bean
 	public Map<String,AgentHandler> forwardHandlerMap(){
 		return new Hashtable<String,AgentHandler>();
-	}
-	
-	@Bean
-	public EventLoopGroup remoteGroup() {
-		return new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 	}
 	
 	@Bean

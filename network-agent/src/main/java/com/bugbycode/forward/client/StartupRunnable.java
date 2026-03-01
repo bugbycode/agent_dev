@@ -24,6 +24,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslHandler;
@@ -45,25 +47,25 @@ public class StartupRunnable implements Runnable {
 	
 	private Channel clientChannel;
 	
-	private EventLoopGroup remoteGroup;
+	private EventLoopGroup workGroup;
 	
 	private boolean starting = false;
 	
 	public StartupRunnable(String host, int port,String keyStorePath,String keyStorePassword,
-			Map<String,AgentHandler> agentHandlerMap,EventLoopGroup remoteGroup) {
+			Map<String,AgentHandler> agentHandlerMap) {
 		this.host = host;
 		this.port = port;
 		this.keyStorePath = keyStorePath;
 		this.keyStorePassword = keyStorePassword;
 		this.agentHandlerMap = agentHandlerMap;
-		this.remoteGroup = remoteGroup;
 	}
 
 	@Override
 	public void run() {
 		starting = true;
 		Bootstrap client = new Bootstrap();
-		client.group(this.remoteGroup).channel(NioSocketChannel.class);
+		this.workGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
+		client.group(this.workGroup).channel(NioSocketChannel.class);
 		client.option(ChannelOption.TCP_NODELAY, true);
 		client.option(ChannelOption.SO_KEEPALIVE, true);
 		client.option(ChannelOption.SO_REUSEADDR, true);
@@ -102,6 +104,9 @@ public class StartupRunnable implements Runnable {
 	}
 	
 	public void restart() {
+		if(this.workGroup != null) {
+			this.workGroup.shutdownGracefully();
+		}
 		this.run();
 	}
 	
