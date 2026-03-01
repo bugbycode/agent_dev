@@ -54,6 +54,7 @@ public class NettyClient {
 		this.bs.option(ChannelOption.SO_REUSEADDR, true);
 		this.bs.option(ChannelOption.TCP_NODELAY, true);
 		this.bs.option(ChannelOption.SO_KEEPALIVE, true);
+		this.bs.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, IdleConfig.CONNECT_TIMEOUT_MILLIS);
 		this.bs.handler(new ChannelInitializer<SocketChannel>() {
 
 			@Override
