@@ -2,7 +2,7 @@ package com.bugbycode.config;
 
 public class HandlerConst {
 	
-	public static final int MAX_FRAME_LENGTH = 10 * 1024;
+	public static final int MAX_FRAME_LENGTH = 4 * 1024 * 1024;
 	
 	public static final int LENGTH_FIELD_OFFSET = 1;
 	
