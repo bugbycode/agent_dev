@@ -281,14 +281,12 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		forwardHandlerMap.remove(token);
 		this.isClosed = true;
 		notifyTask();
-		logger.info("Close session [{}]", token);
 	}
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		this.isClosed = false;
 		agentHandlerMap.put(token, this);
-		logger.info("Open session [{}]", token);
 	}
 	
 	@Override
@@ -401,7 +399,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 		
 		ConnectionInfo con = new ConnectionInfo(host, port);
-		
 		Message conMsg = new Message(token, MessageType.CONNECTION, con);
 		
 		HostModule hostModule = hostMapper.queryByHost(host);
@@ -434,8 +431,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			workTaskPool.add(new InsertHostTask(hostMapper, hostModule));
 			
 		}
-		
-		logger.info("Begin connection {}:{}.", host, port);
 		
 		if(!(hostModule == null || hostModule.getForward() == 0)) {
 			
