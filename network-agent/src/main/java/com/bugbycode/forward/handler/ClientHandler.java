@@ -1,5 +1,6 @@
 package com.bugbycode.forward.handler;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,9 +38,15 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 			ctx.close();
 		}
 		logger.info("Connection closed.");
-		Set<String> set = nettyClientMap.keySet();
 		
-		for(String token : set) {
+		Set<String> keySet = nettyClientMap.keySet();
+		Set<String> tokens = new HashSet<String>();
+		
+		for(String token : keySet) {
+			tokens.add(token);
+		}
+		
+		for(String token : tokens) {
 			NettyClient client = nettyClientMap.get(token);
 			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
 			if(client.isForward()) {
@@ -89,8 +96,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		logger.error(cause.getLocalizedMessage());
-		this.channelInactive(ctx);
+		logger.error(cause.getMessage(), cause);
 	}
 	
 }
