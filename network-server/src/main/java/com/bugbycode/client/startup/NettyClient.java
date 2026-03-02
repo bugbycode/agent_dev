@@ -103,7 +103,7 @@ public class NettyClient {
 	}
 	
 	public boolean isOpen() {
-		return clientChannel != null || clientChannel.isOpen();
+		return clientChannel != null && clientChannel.isOpen();
 	}
 	
 	public void close(boolean sendClose) {
