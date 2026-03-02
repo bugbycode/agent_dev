@@ -88,30 +88,18 @@ public class NettyClient {
 					nettyClientMap.remove(token);
 					close(true);
 				}
-				notifyTask();
 			}
 		});
-		waitOpenFinish();
 	}
 	
 	public void writeAndFlush(byte[] data) {
+		if(!isOpen()) {
+			close(true);
+			return;
+		}
 		ByteBuf buff = clientChannel.alloc().buffer(data.length);
 		buff.writeBytes(data);
 		clientChannel.writeAndFlush(buff);
-	}
-	
-	private synchronized void waitOpenFinish() {
-		try {
-			if(clientChannel == null) {
-				wait(1000);
-			}
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-	
-	private synchronized void notifyTask() {
-		this.notifyAll();
 	}
 	
 	public boolean isOpen() {
