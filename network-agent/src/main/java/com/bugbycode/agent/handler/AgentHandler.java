@@ -204,7 +204,10 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		ctx.close();
+		NettyClient client = nettyClientMap.get(token);
+		if(client != null) {
+			client.closeClient();
+		}
 	}
 	
 	@Override
