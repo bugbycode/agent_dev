@@ -7,9 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.handler.ClientHandler;
 import com.bugbycode.config.IdleConfig;
-import com.bugbycode.forward.handler.ForwardHandler;
-import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageType;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -39,12 +36,12 @@ public class NettyClient {
 	
 	private Channel clientChannel;
 	
-	private ForwardHandler forwardHandler;
+	private Channel forwardChannel;
 	
-	public NettyClient(String host, int port, ForwardHandler forwardHandler) {
+	public NettyClient(String host, int port, Channel forwardChannel) {
 		this.host = host;
 		this.port = port;
-		this.forwardHandler = forwardHandler;
+		this.forwardChannel = forwardChannel;
 	}
 	
 	public void connection() {
@@ -60,35 +57,45 @@ public class NettyClient {
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.pipeline().addLast(new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT,
 						IdleConfig.ALL_IDEL_TIME_OUT, TimeUnit.SECONDS));
-				ch.pipeline().addLast(new ClientHandler(forwardHandler, NettyClient.this));
+				ch.pipeline().addLast(new ClientHandler(NettyClient.this));
 			}
 			
 		});
-		this.bs.connect(this.host, this.port).addListener(new ChannelFutureListener() {
+		try {
+			this.bs.connect(this.host, this.port).addListener(new ChannelFutureListener() {
 
-			@Override
-			public void operationComplete(ChannelFuture future) throws Exception {
-				Message message = new Message(null, MessageType.CONNECTION_ERROR, null);
-				if(future.isSuccess()) {
-					message.setType(MessageType.CONNECTION_SUCCESS);
-					clientChannel = future.channel();
-					logger.info("Connection {}:{} success.", host, port);
-				} else {
-					logger.info("Connection {}:{} failed.", host, port);
+				@Override
+				public void operationComplete(ChannelFuture future) throws Exception {
+					if(future.isSuccess()) {
+						clientChannel = future.channel();
+						logger.info("Connection {}:{} success.", host, port);
+					} else {
+						logger.info("Connection {}:{} failed.", host, port);
+					}
 				}
-				forwardHandler.sendMessage(message);
-			}
-			
-		});
+				
+			}).sync();
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 	
 	public void writeAndFlush(byte[] data) {
-		if(clientChannel == null) {
+		if(clientChannel == null || !clientChannel.isOpen()) {
 			return;
 		}
 		ByteBuf buff = clientChannel.alloc().buffer(data.length);
 		buff.writeBytes(data);
 		clientChannel.writeAndFlush(buff);
+	}
+	
+	public void recv(byte[] data) {
+		if(forwardChannel == null || !forwardChannel.isOpen()) {
+			return;
+		}
+		ByteBuf buff = forwardChannel.alloc().buffer(data.length);
+		buff.writeBytes(data);
+		forwardChannel.writeAndFlush(buff);
 	}
 	
 	public void close() {
@@ -97,9 +104,9 @@ public class NettyClient {
 			clientChannel.close();
 		}
 		
-		Message message = new Message(null, MessageType.CLOSE_CONNECTION, null);
-		
-		this.forwardHandler.sendMessage(message);
+		if(forwardChannel != null && forwardChannel.isOpen()) {
+			forwardChannel.close();
+		}
 		
 		logger.info("Disconnection {}:{}.", host, port);
 		

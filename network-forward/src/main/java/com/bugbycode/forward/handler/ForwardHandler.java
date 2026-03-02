@@ -1,13 +1,9 @@
 package com.bugbycode.forward.handler;
 
-import java.util.LinkedList;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
-import com.bugbycode.module.Message;
-import com.bugbycode.module.MessageType;
 import com.util.StringUtil;
 
 import io.netty.buffer.ByteBuf;
@@ -25,32 +21,26 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private NettyClient client;
 	
-	private LinkedList<Message> queue;
+	private String host;
 	
-	private boolean isClosed;
-	
-	private boolean firstConnect = false;
+	private int port;
 	
 	public ForwardHandler(String host, int port) {
-		this.queue = new LinkedList<Message>();
-		this.firstConnect = true;
-		this.client = new NettyClient(host, port, this);
+		this.host = host;
+		this.port = port;
 	}
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		logger.info("Client connected.");
-		this.isClosed = false;
 		this.forwardChannel = ctx.channel();
+		this.client = new NettyClient(host, port, forwardChannel);
+		this.client.connection();
 	}
 
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		logger.info("Client disconnected.");
-		this.isClosed = true;
-		this.firstConnect = true;
-		ctx.close();
-		notifyTask();
 		if(this.client != null) {
 			this.client.close();
 		}
@@ -80,17 +70,6 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
 		logger.debug(StringUtil.byteToHexString(data, data.length));
 		
-		if(this.firstConnect) {
-			this.firstConnect = false;
-			this.client.connection();
-			Message message = read();
-			logger.debug(message);
-			if(message.getType() == MessageType.CONNECTION_ERROR) {
-				throw new RuntimeException("Connection " + this.client.getHost() + ":" + this.client.getPort() + " failed.");
-			}
-			new WorkThread(ctx).start();
-		}
-		
 		this.client.writeAndFlush(data);
 	}
 	
@@ -100,66 +79,4 @@ public class ForwardHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 	}
 	
-	public synchronized void sendMessage(Message msg) {
-		queue.addLast(msg);
-		notifyTask();
-	}
-	
-	private synchronized void notifyTask() {
-		this.notifyAll();
-	}
-	
-	private synchronized Message read() throws InterruptedException {
-		while(queue.isEmpty()) {
-			wait();
-			if(isClosed) {
-				throw new InterruptedException("Connetion closed.");
-			}
-		}
-		
-		return queue.removeFirst();
-	}
-	
-	private class WorkThread extends Thread{
-
-		private ChannelHandlerContext ctx;
-		
-		public WorkThread(ChannelHandlerContext ctx) {
-			this.ctx = ctx;
-		}
-		
-		@Override
-		public void run() {
-			Channel channel = ctx.channel();
-			
-			notifyTask();
-			
-			while(!isClosed) {
-				try {
-					
-					Message msg = read();
-					
-					if(msg.getType() == MessageType.CLOSE_CONNECTION) {
-						ctx.close();
-						continue;
-					}
-					
-					if(msg.getType() != MessageType.TRANSFER_DATA) {
-						continue;
-					}
-					
-					byte[] data = (byte[]) msg.getData();
-					ByteBuf buff = channel.alloc().buffer(data.length);
-					buff.writeBytes(data);
-					channel.writeAndFlush(buff);
-					
-					logger.debug(StringUtil.byteToHexString(data, data.length));
-					
-				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-		
-	}
 }
