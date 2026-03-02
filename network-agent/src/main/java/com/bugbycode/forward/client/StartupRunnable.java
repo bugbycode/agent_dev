@@ -8,7 +8,7 @@ import javax.net.ssl.SSLEngine;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.bugbycode.agent.handler.AgentHandler;
+import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.config.HandlerConst;
 import com.bugbycode.config.IdleConfig;
 import com.bugbycode.exception.AgentException;
@@ -43,7 +43,7 @@ public class StartupRunnable implements Runnable {
 	
 	private String keyStorePassword;
 	
-	private Map<String,AgentHandler> agentHandlerMap;
+	private Map<String,NettyClient> nettyClientMap;
 	
 	private Channel clientChannel;
 	
@@ -52,12 +52,12 @@ public class StartupRunnable implements Runnable {
 	private boolean starting = false;
 	
 	public StartupRunnable(String host, int port,String keyStorePath,String keyStorePassword,
-			Map<String,AgentHandler> agentHandlerMap) {
+			Map<String,NettyClient> nettyClientMap) {
 		this.host = host;
 		this.port = port;
 		this.keyStorePath = keyStorePath;
 		this.keyStorePassword = keyStorePassword;
-		this.agentHandlerMap = agentHandlerMap;
+		this.nettyClientMap = nettyClientMap;
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class StartupRunnable implements Runnable {
 							HandlerConst.LENGTH_FIELD_LENGTH, HandlerConst.LENGTH_AD_JUSTMENT, 
 							HandlerConst.INITIAL_BYTES_TO_STRIP));
 				 ch.pipeline().addLast(new MessageEncoder());
-				 ch.pipeline().addLast(new ClientHandler(StartupRunnable.this,agentHandlerMap));
+				 ch.pipeline().addLast(new ClientHandler(StartupRunnable.this, nettyClientMap));
 			}
 			
 		});

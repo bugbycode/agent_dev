@@ -16,7 +16,6 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 
@@ -37,16 +36,6 @@ public class AppConfig {
 	@Bean
 	public Map<String,NettyClient> nettyClientMap(){
 		return new Hashtable<String,NettyClient>();
-	}
-	
-	@Bean
-	public Map<String,AgentHandler> agentHandlerMap(){
-		return new Hashtable<String,AgentHandler>();
-	}
-	
-	@Bean
-	public Map<String,AgentHandler> forwardHandlerMap(){
-		return new Hashtable<String,AgentHandler>();
 	}
 	
 	@Bean

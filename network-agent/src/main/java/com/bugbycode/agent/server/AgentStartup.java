@@ -9,7 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
@@ -21,12 +20,6 @@ import com.util.ProxyUtil;
 @Component
 @Configuration
 public class AgentStartup implements ApplicationRunner {
-
-	@Autowired
-	private Map<String,AgentHandler> agentHandlerMap;
-	
-	@Autowired
-	private Map<String,AgentHandler> forwardHandlerMap;
 	
 	@Autowired
 	private Map<String,NettyClient> nettyClientMap;
@@ -66,11 +59,11 @@ public class AgentStartup implements ApplicationRunner {
 		
 		tableMapper.initHostTable();
 		
-		StartupRunnable startup = new StartupRunnable(host, port,keystorePath,keystorePassword,forwardHandlerMap); 
+		StartupRunnable startup = new StartupRunnable(host, port,keystorePath, keystorePassword, nettyClientMap); 
 		
 		new WorkTread(startup).start();
 		
-		AgentServer server = new AgentServer(agentPort, soBacklog, agentHandlerMap,forwardHandlerMap,nettyClientMap,
+		AgentServer server = new AgentServer(agentPort, soBacklog, nettyClientMap,
 				startup,hostMapper,testnetService,workTaskPool);
 		new Thread(server).start();
 		

@@ -37,10 +37,6 @@ public class AgentServer implements Runnable {
 	
 	private EventLoopGroup worker;
 	
-	private Map<String,AgentHandler> agentHandlerMap;
-	
-	private Map<String,AgentHandler> forwardHandlerMap;
-	
 	private Map<String,NettyClient> nettyClientMap;
 	
 	private StartupRunnable startup;
@@ -53,16 +49,12 @@ public class AgentServer implements Runnable {
 	
 	public AgentServer(int agentPort,
 			int soBacklog,
-			Map<String,AgentHandler> agentHandlerMap,
-			Map<String,AgentHandler> forwardHandlerMap,
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
 			HostMapper hostMapper,TestnetService testnetService,
 			WorkTaskPool workTaskPool) {
 		this.agentPort = agentPort;
 		this.soBacklog = soBacklog;
-		this.agentHandlerMap = agentHandlerMap;
-		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
 		this.startup = startup;
 		this.hostMapper = hostMapper;
@@ -89,8 +81,7 @@ public class AgentServer implements Runnable {
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.pipeline().addLast(
 						new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT, IdleConfig.ALL_IDEL_TIME_OUT),
-						new AgentHandler(agentHandlerMap,
-						forwardHandlerMap,nettyClientMap,startup,hostMapper,
+						new AgentHandler(nettyClientMap,startup,hostMapper,
 						testnetService,workTaskPool));
 			}
 		});

@@ -2,8 +2,6 @@ package com.bugbycode.agent.handler;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,16 +11,11 @@ import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.exception.AgentException;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
-import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
 import com.bugbycode.module.Protocol;
-import com.bugbycode.module.host.HostModule;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
-import com.bugbycode.webapp.pool.task.host.InsertHostTask;
-import com.bugbycode.webapp.pool.task.host.UpdateForwardTask;
-import com.bugbycode.webapp.pool.task.host.UpdateResultTask;
 import com.util.RandomUtil;
 import com.util.StringUtil;
 
@@ -35,13 +28,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 
 public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
-	private final byte[] HTTP_PROXY_RESPONSE = "HTTP/1.1 200 Connection Established\r\n\r\n".getBytes(); 
-
 	private final Logger logger = LogManager.getLogger(AgentHandler.class);
-	
-	private Map<String,AgentHandler> agentHandlerMap;
-	
-	private Map<String,AgentHandler> forwardHandlerMap;
 	
 	private Map<String,NettyClient> nettyClientMap;
 	
@@ -59,29 +46,20 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private final String token;
 	
-	private LinkedList<Message> queue;
-	
-	private boolean isClosed;
-	
 	private HostMapper hostMapper;
 	
 	private TestnetService testnetService;
 	
 	private WorkTaskPool workTaskPool;
 	
-	public AgentHandler(Map<String, AgentHandler> agentHandlerMap, 
-			Map<String,AgentHandler> forwardHandlerMap,
-			Map<String,NettyClient> nettyClientMap,
+	public AgentHandler(Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
 			HostMapper hostMapper,TestnetService testnetService,
 			WorkTaskPool workTaskPool) {
-		this.agentHandlerMap = agentHandlerMap;
-		this.forwardHandlerMap = forwardHandlerMap;
 		this.nettyClientMap = nettyClientMap;
 		this.startup = startup;
 		this.firstConnect = true;
 		this.hostMapper = hostMapper;
-		this.queue = new LinkedList<Message>();
 		this.token = RandomUtil.GetGuid32();
 		this.testnetService = testnetService;
 		this.workTaskPool = workTaskPool;
@@ -110,16 +88,8 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				
 				host = StringUtil.formatIpv4Address(ipv4_buf).trim();
 				
-				Message message = connection(host, port, ctx);
-				
-				byte[] res_buf = new byte[0x08];
-				System.arraycopy(data, 0, res_buf, 0, res_buf.length);
-				res_buf[0x01] = 0x5A;
-				
-				message.setType(MessageType.TRANSFER_DATA);
-				message.setData(res_buf);
-				
-				sendMessage(message);
+				NettyClient client = new NettyClient(token, nettyClientMap, ctx.channel(), startup, hostMapper, testnetService, workTaskPool, data);
+				client.connection(host, port, protocol);
 				
 				return;
 			} else if(this.protocol == Protocol.SOCKET_5) { // socket5 setp1
@@ -176,26 +146,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				}
 			}
 			
-			Message message = connection(host, port, ctx);
+			NettyClient client = new NettyClient(token, nettyClientMap, ctx.channel(), startup, hostMapper, testnetService, workTaskPool, data);
+			client.connection(host, port, protocol);
 			
-			message.setType(MessageType.TRANSFER_DATA);
-			message.setToken(token);
-			
-			if(this.protocol == Protocol.HTTPS) {
-				message.setData(HTTP_PROXY_RESPONSE);
-				sendMessage(message);
-			}else if(isForward) {
-				message.setType(MessageType.TRANSFER_DATA);
-				message.setData(data);
-				message.setToken(token);
-				startup.writeAndFlush(message);
-			}else {
-				NettyClient client = nettyClientMap.get(token);
-				if(client == null) {
-					throw new AgentException("token error.");
-				}
-				client.writeAndFlush(data);
-			}
 		} else if(this.protocol == Protocol.SOCKET_5 && (StringUtil.isBlank(host) || port == 0)) { // socket5
 			byte ver = data[0];
 			byte cmd = data[1];
@@ -239,14 +192,9 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			
 			port = (data[data.length - 2] << 0x08) & 0xFF00 | data[data.length - 1] & 0xFF;
 			
-			Message message = connection(host, port, ctx);
+			NettyClient client = new NettyClient(token, nettyClientMap, ctx.channel(), startup, hostMapper, testnetService, workTaskPool, data);
+			client.connection(host, port, protocol);
 			
-			data[1] = 0;
-			data[2] = 0;
-			message.setData(data);
-			message.setType(MessageType.TRANSFER_DATA);
-			
-			sendMessage(message);
 		} else {
 			if(isForward) {
 				Message message = new Message();
@@ -267,42 +215,23 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		ctx.close();
-		//关闭连接
-		NettyClient client = nettyClientMap.get(token);
-		if(client != null) {
-			client.close();
-		}
-		agentHandlerMap.remove(token);
-		if(isForward) {
-			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
-			startup.writeAndFlush(message);
-			logger.info("Disconnection " + host + ":" + port + ".");
-		}
-		forwardHandlerMap.remove(token);
-		this.isClosed = true;
-		notifyTask();
 	}
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		this.isClosed = false;
-		agentHandlerMap.put(token, this);
+		
 	}
 	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		if(cause instanceof AgentException) {
-			logger.info(cause.getMessage());
-		} else if(cause instanceof IOException) {
+		if(cause instanceof IOException || cause instanceof AgentException) {
 			logger.error(cause.getMessage());
 		} else {
 			logger.error(cause.getMessage(), cause);
 		}
 		if(ctx != null) {
-			ctx.channel().close();
 			ctx.close();
 		}
-		this.isClosed = true;
 	}
 	
 	@Override
@@ -314,67 +243,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 				logger.debug("Channel timeout.");
 			}
 		}
-	}
-	
-	public synchronized void sendMessage(Message msg) {
-		queue.addLast(msg);
-		notifyTask();
-	}
-	
-	private synchronized void notifyTask() {
-		this.notifyAll();
-	}
-	
-	private synchronized Message read() throws InterruptedException {
-		while(queue.isEmpty()) {
-			wait();
-			if(isClosed) {
-				throw new InterruptedException("Connetion closed.");
-			}
-		}
-		
-		return queue.removeFirst();
-	}
-	
-	private class WorkThread extends Thread{
-
-		private ChannelHandlerContext ctx;
-		
-		public WorkThread(ChannelHandlerContext ctx) {
-			this.ctx = ctx;
-		}
-		
-		@Override
-		public void run() {
-			Channel channel = ctx.channel();
-			
-			notifyTask();
-			
-			while(!isClosed) {
-				try {
-					
-					Message msg = read();
-					
-					if(msg.getType() == MessageType.CLOSE_CONNECTION) {
-						ctx.close();
-						continue;
-					}
-					
-					if(msg.getType() != MessageType.TRANSFER_DATA) {
-						continue;
-					}
-					
-					byte[] data = (byte[]) msg.getData();
-					ByteBuf buff = channel.alloc().buffer(data.length);
-					buff.writeBytes(data);
-					channel.writeAndFlush(buff);
-					
-				} catch (InterruptedException e) {
-					logger.debug(e.getMessage());
-				}
-			}
-		}
-		
 	}
 	
 	private void firstSendMessageToClient(Message msg, ChannelHandlerContext ctx) {
@@ -390,129 +258,4 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 		}
 	}
 	
-	private Message connection(String host,int port,ChannelHandlerContext ctx) throws Exception {
-		Message message = null;
-		host = host.trim();
-		
-		if(StringUtil.isBlank(host) || port == 0) {
-			throw new AgentException("Protocol error.");
-		}
-		
-		ConnectionInfo con = new ConnectionInfo(host, port);
-		Message conMsg = new Message(token, MessageType.CONNECTION, con);
-		
-		HostModule hostModule = hostMapper.queryByHost(host);
-		
-		boolean isNewHost = false;
-		
-		Date now = new Date();
-		
-		if(hostModule == null) {
-			isNewHost = true;
-			hostModule = new HostModule();
-
-			hostModule.setHost(host);
-			hostModule.setForward(0);
-			hostModule.setConnTime(now);
-			
-			if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
-				
-				String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
-				
-				if(!testnetService.checkHttpConnect(url)) {
-					hostModule.setForward(1);
-				}
-				
-			} else if(protocol == Protocol.SOCKET_4 || protocol == Protocol.SOCKET_5) {
-				//socket5 or socket5 default forward
-				hostModule.setForward(1);
-			}
-			
-			workTaskPool.add(new InsertHostTask(hostMapper, hostModule));
-			
-		}
-		
-		if(!(hostModule == null || hostModule.getForward() == 0)) {
-			
-			forwardHandlerMap.put(token, this);
-			
-			startup.writeAndFlush(conMsg);
-			
-			message = read();
-			
-			if(message.getType() == MessageType.CONNECTION_ERROR) {
-				
-				workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
-				
-				throw new AgentException("Connection " + host + ":" + port + " failed.");
-				
-			} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
-				
-				logger.info("Connection " + host + ":" + port + " success.");
-				
-			}
-			
-			isForward = true;
-		} else {
-			new NettyClient(conMsg, nettyClientMap, agentHandlerMap)
-			.connection();
-			
-			message = read();
-			
-			if(message.getType() == MessageType.CONNECTION_ERROR) {
-				
-				//不是新访问的站点则默认不转发
-				if(!isNewHost) {
-					
-					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
-					
-					throw new AgentException("Connection " + host + ":" + port + " failed.");
-				}
-				
-				forwardHandlerMap.put(token, this);
-				
-				startup.writeAndFlush(conMsg);
-				
-				message = read();
-				
-				if(message.getType() == MessageType.CONNECTION_ERROR) {
-					
-					workTaskPool.add(new UpdateResultTask(hostMapper, host, 0, now));
-					
-					throw new AgentException("Connection " + host + ":" + port + " failed.");
-					
-				} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
-					
-					logger.info("Connection " + host + ":" + port + " success.");
-					
-				}
-				
-				workTaskPool.add(new UpdateForwardTask(host, 1, hostMapper));
-				
-				isForward = true;
-				
-			} /*else {
-
-				if(protocol == Protocol.HTTP || protocol == Protocol.HTTPS) {
-					
-					hostModule = hostMapper.queryByHost(host);
-					
-					if(hostModule != null && hostModule.getForward() == 0) {
-						
-						String url = (protocol == Protocol.HTTP ? "http://" : "https://") + host + ":" + port;
-						
-						workTaskPool.add(new TestNetConnectTask(testnetService, url, 
-								new UpdateForwardTask(host, 1, hostMapper)));
-						
-					}
-				}
-			}*/
-		}
-		
-		workTaskPool.add(new UpdateResultTask(hostMapper, host, 1, now));
-		
-		new WorkThread(ctx).start();
-		
-		return message;
-	}
 }

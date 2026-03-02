@@ -6,7 +6,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.bugbycode.agent.handler.AgentHandler;
+import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
@@ -20,10 +20,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 	
 	private final Logger logger = LogManager.getLogger(ClientHandler.class);
 	
-	private Map<String,AgentHandler> agentHandlerMap;
+	private Map<String,NettyClient> nettyClientMap;
 	
-	public ClientHandler(StartupRunnable startup,Map<String, AgentHandler> agentHandlerMap) {
-		this.agentHandlerMap = agentHandlerMap;
+	public ClientHandler(StartupRunnable startup,Map<String,NettyClient> nettyClientMap) {
+		this.nettyClientMap = nettyClientMap;
 	}
 
 	@Override
@@ -37,11 +37,14 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 			ctx.close();
 		}
 		logger.info("Connection closed.");
-		Set<String> set = agentHandlerMap.keySet();
+		Set<String> set = nettyClientMap.keySet();
+		
 		for(String token : set) {
-			AgentHandler handler = agentHandlerMap.get(token);
+			NettyClient client = nettyClientMap.get(token);
 			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
-			handler.sendMessage(message);
+			if(client.isForward()) {
+				client.recv(message);
+			}
 		}
 	}
 
@@ -55,8 +58,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		if(type == MessageType.HEARTBEAT) {
 			//
 		}else {
-			AgentHandler handler = agentHandlerMap.get(token);
-			if(handler == null) {
+			NettyClient client = nettyClientMap.get(token);
+			if(client == null) {
 				if(type != MessageType.CLOSE_CONNECTION) {
 					message.setData(null);
 					message.setType(MessageType.CLOSE_CONNECTION);
@@ -65,7 +68,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 				}
 				return;
 			}
-			handler.sendMessage(message);
+			client.recv(message);
 		}
 	}
 
