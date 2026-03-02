@@ -38,8 +38,6 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	
 	private boolean firstConnect = false;
 	
-	private boolean isForward = false;
-	
 	private Protocol protocol = Protocol.HTTP;
 	
 	private StartupRunnable startup;
@@ -196,19 +194,11 @@ public class AgentHandler extends SimpleChannelInboundHandler<ByteBuf> {
 			client.connection(host, port, protocol);
 			
 		} else {
-			if(isForward) {
-				Message message = new Message();
-				message.setType(MessageType.TRANSFER_DATA);
-				message.setData(data);
-				message.setToken(token);
-				startup.writeAndFlush(message);
-			}else {
-				NettyClient client = nettyClientMap.get(token);
-				if(client == null) {
-					throw new AgentException("token error.");
-				}
-				client.writeAndFlush(data);
+			NettyClient client = nettyClientMap.get(token);
+			if(client == null) {
+				throw new AgentException("token error.");
 			}
+			client.writeAndFlush(data);
 		}
 	}
 	
