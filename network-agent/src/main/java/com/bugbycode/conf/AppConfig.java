@@ -26,8 +26,6 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 @Configuration
 public class AppConfig {
 	
-	public static final int WORK_THREAD_NUMBER = 100;
-	
 	@Bean("channelGroup")
 	public ChannelGroup getChannelGroup() {
 		return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
