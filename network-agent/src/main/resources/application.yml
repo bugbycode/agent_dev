@@ -15,7 +15,7 @@ spring:
       port: 50000 #自己电脑internet代理端口
       so_backlog: 1024 #代理服务最大连接数
     auth: 
-      host: coinkline.com #network-server 部署的ip地址
+      host: localhost #network-server 部署的ip地址
       port: 36500 #network-server 配置的代理端口
   web:
     login: #管理界面账号密码
