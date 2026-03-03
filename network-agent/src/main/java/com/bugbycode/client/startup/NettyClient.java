@@ -327,7 +327,9 @@ public class NettyClient {
 		
 		nettyClientMap.remove(token);
 		
-		logger.info("Disconnection {}.", conn);
+		if(conn != null) {
+			logger.info("Disconnection {}.", conn);
+		}
 		
 	}
 	
