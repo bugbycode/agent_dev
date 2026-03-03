@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
-import com.bugbycode.config.IdleConfig;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.service.testnet.TestnetService;
@@ -23,7 +22,6 @@ import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 
 public class AgentServer implements Runnable {
 	
@@ -76,7 +74,6 @@ public class AgentServer implements Runnable {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ch.pipeline().addLast(
-						new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT, IdleConfig.ALL_IDEL_TIME_OUT),
 						new AgentHandler(nettyClientMap,startup,hostMapper,
 						testnetService,workTaskPool));
 			}
