@@ -63,6 +63,8 @@ public class NettyClient {
 	
 	private Channel agentChannel;
 	
+	private boolean isOpen = false;
+	
 	private String host; 
 	private int port; 
 	private Protocol protocol;
@@ -84,6 +86,7 @@ public class NettyClient {
 		this.testnetService = testnetService;
 		this.workTaskPool = workTaskPool;
 		this.data = data;
+		this.isOpen = false;
 	}
 	
 	public void connection(String host, int port, Protocol protocol) {
@@ -252,6 +255,8 @@ public class NettyClient {
 			
 		} else if(message.getType() == MessageType.CONNECTION_SUCCESS) {
 			
+			this.isOpen = true;
+			
 			if(isForward) {
 				workTaskPool.add(new UpdateForwardTask(host, 1, hostMapper));
 			}
@@ -333,10 +338,11 @@ public class NettyClient {
 		
 		nettyClientMap.remove(token);
 		
-		if(conn != null) {
+		if(conn != null && this.isOpen) {
 			logger.info("Disconnection {}.", conn);
 		}
 		
+		this.isOpen = false;
 	}
 	
 	public boolean isForward() {
