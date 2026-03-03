@@ -1,13 +1,11 @@
 package com.bugbycode.client.startup;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.handler.ClientHandler;
-import com.bugbycode.config.IdleConfig;
 import com.bugbycode.module.ConnectionInfo;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
@@ -24,7 +22,6 @@ import io.netty.channel.MultiThreadIoEventLoopGroup;
 import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.timeout.IdleStateHandler;
 
 public class NettyClient {
 	
@@ -61,13 +58,9 @@ public class NettyClient {
 		
 		this.bs.group(workGroup).channel(NioSocketChannel.class);
 		this.bs.option(ChannelOption.TCP_NODELAY, true);
-		this.bs.option(ChannelOption.SO_KEEPALIVE, true);
-		this.bs.option(ChannelOption.SO_REUSEADDR, true);
 		this.bs.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				ch.pipeline().addLast(new IdleStateHandler(IdleConfig.READ_IDEL_TIME_OUT, IdleConfig.WRITE_IDEL_TIME_OUT,
-						IdleConfig.ALL_IDEL_TIME_OUT, TimeUnit.SECONDS));
 				ch.pipeline().addLast(new ClientHandler(nettyClientMap,serverChannel,token,NettyClient.this));
 			}
 		});
