@@ -310,14 +310,15 @@ public class NettyClient {
 		if(agentChannel != null && agentChannel.isOpen()) {
 			
 			agentChannel.close();
-
-			if(isForward) {//通知转发服务关闭连接
-				Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
-				try {
-					startup.writeAndFlush(message);
-				} catch (Exception e) {
-					logger.error(e.getMessage());
-				}
+			
+		}
+		
+		if(isForward) {//通知转发服务关闭连接
+			Message message = new Message(token, MessageType.CLOSE_CONNECTION, null);
+			try {
+				startup.writeAndFlush(message);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
 			}
 		}
 
