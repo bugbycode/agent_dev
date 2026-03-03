@@ -32,7 +32,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-		logger.info("Client connected.");
+		logger.info("Client connected from {}", ctx.channel().remoteAddress().toString());
 	}
 	
 	@Override
