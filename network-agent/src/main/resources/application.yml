@@ -4,7 +4,7 @@ spring:
 #  main:
 #    web-application-type: NONE
   keystore:
-    path: c:/client.p12
+    path: config/client.p12
     password: china@
   server:
     datasource:
