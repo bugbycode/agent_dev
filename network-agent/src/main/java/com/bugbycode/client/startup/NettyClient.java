@@ -149,6 +149,8 @@ public class NettyClient {
 		this.workGroup = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bs.group(workGroup).channel(NioSocketChannel.class);
 		bs.option(ChannelOption.TCP_NODELAY, true);
+		bs.option(ChannelOption.SO_KEEPALIVE, true);
+		bs.option(ChannelOption.SO_REUSEADDR, true);
 		bs.handler(new ChannelInitializer<SocketChannel>() {
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
