@@ -200,7 +200,11 @@ public class NettyClient {
 				clientChannel.writeAndFlush(buff);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			if(e instanceof AgentException) {
+				logger.error(e.getMessage());
+			} else {
+				logger.error(e.getMessage(), e);
+			}
 			closeClient();
 		}
 		
