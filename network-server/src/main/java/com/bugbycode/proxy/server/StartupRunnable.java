@@ -42,8 +42,6 @@ public class StartupRunnable implements Runnable {
 		worker = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
 				.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-				.option(ChannelOption.TCP_NODELAY, true)
-				.option(ChannelOption.SO_KEEPALIVE, true)
 				.option(ChannelOption.SO_BACKLOG, so_backlog)
 				.option(ChannelOption.SO_REUSEADDR, true)
 				.childOption(ChannelOption.TCP_NODELAY, true)
