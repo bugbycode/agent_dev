@@ -9,16 +9,6 @@ public class Page implements Serializable{
 	 */
 	private static final long serialVersionUID = 7871685419664199797L;
 	
-	public static final int DEFAULT_PAGE_SIZE_ONETEN = 10;
-	public static final int DEFAULT_PAGE_SIZE = 15;
-	public static final int DEFAULT_PAGE_SIZE_THREE = 30;
-	public static final int DEFAULT_PAGE_SIZE_FIVE = 50;
-	public static final int DEFAULT_PAGE_SIZE_TEN = 100;
-	public static final int DEFAULT_PAGE_SIZE_THRETY = 300;
-	public static final int DEFAULT_PAGE_SIZE_FIVETY = 500;
-
-	public static final int DEFAULT_RULE_PAGE_SIZE = 50;
-
 	private int pageSize = 15;
 
 	private int totalCount; // 所有条数
