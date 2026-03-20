@@ -22,7 +22,6 @@ package com.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
@@ -146,14 +145,8 @@ public class RandomUtil extends Object {
      * Method to generate the random GUID
      */
     private void getRandomGUID(boolean secure) {
-        MessageDigest md5 = null;
+        
         StringBuffer sbValueBeforeMD5 = new StringBuffer();
-
-        try {
-            md5 = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            System.out.println("Error: " + e);
-        }
 
         try {
             long time = System.currentTimeMillis();
@@ -164,6 +157,8 @@ public class RandomUtil extends Object {
             } else {
                 rand = myRand.nextLong();
             }
+            
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
 
             // This StringBuffer can be a long as you need; the MD5
             // hash will always return 128 bits. You can change

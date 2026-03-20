@@ -1,9 +1,9 @@
 package com.util.page;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Page implements Serializable{
+	
 	/**
 	 * 
 	 */
@@ -23,46 +23,13 @@ public class Page implements Serializable{
 
 	private int totalCount; // 所有条数
 
-	private int currentPage;
-
 	private int startIndex = 0; // 起始页
 
 	private int[] indexes = new int[0];
 
-	private int nextIndex; // 下一页
-
-	private int previousIndex; // 上一页
-
-	private int pageCount;
-
-	private int lastIndex = 0; // 末页
-
 	public Page(int pageSize, int startIndex) {
 		this.pageSize = pageSize;
 		this.startIndex = startIndex;
-
-	}
-
-	public Page(List list, int totalCount) {
-		setPageSize(pageSize);
-		setTotalCount(totalCount);
-		setStartIndex(0);
-	}
-
-	public Page(List list, int totalCount, int startIndex) {
-		setPageSize(pageSize);
-		setTotalCount(totalCount);
-		setStartIndex(startIndex);
-	}
-
-	public Page(List list, int totalCount, int pageSize, int startIndex) {
-		setPageSize(pageSize);
-		if (totalCount == 0) {
-			setTotalCount(1);
-		} else {
-			setTotalCount(totalCount);
-		}
-		setStartIndex(startIndex);
 	}
 
 	public void setTotalCount(int totalCount) {
@@ -109,20 +76,12 @@ public class Page implements Serializable{
 		return startIndex;
 	}
 
-	public void setNextIndex(int nextIndex) {
-		this.nextIndex = nextIndex;
-	}
-
 	public int getNextIndex() {
 		int nextIndex = getStartIndex() + pageSize;
 		if (nextIndex >= totalCount)
 			return getStartIndex();
 		else
 			return nextIndex;
-	}
-
-	public void setPreviousIndex(int previousIndex) {
-		this.previousIndex = previousIndex;
 	}
 
 	public int getPreviousIndex() {
@@ -132,10 +91,6 @@ public class Page implements Serializable{
 			return 0;
 		else
 			return previousIndex;
-	}
-
-	public void setPageCount(int pageCount) {
-		this.pageCount = pageCount;
 	}
 
 	public int getPageCount() {
@@ -151,14 +106,6 @@ public class Page implements Serializable{
 		} else {
 			return getStartIndex() / pageSize + 1;
 		}
-	}
-
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
-
-	public void setLastIndex(int lastIndex) {
-		this.lastIndex = lastIndex;
 	}
 
 	public int getLastIndex() {
@@ -177,4 +124,6 @@ public class Page implements Serializable{
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
+	
+	
 }
