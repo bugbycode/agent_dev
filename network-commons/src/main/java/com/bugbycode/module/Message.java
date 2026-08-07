@@ -14,6 +14,10 @@ public class Message implements Serializable {
 	private MessageType type;
 	
 	private Object data;
+	
+	private long time;
+	
+	private String timezone;
 
 	public Message() {
 		
@@ -49,6 +53,22 @@ public class Message implements Serializable {
 		this.data = data;
 	}
 	
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+
+	public String getTimezone() {
+		return timezone;
+	}
+
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+
 	public MessageType resolve(int typeValue) {
 		MessageType[] arr = MessageType.values();
 		MessageType result = null;
