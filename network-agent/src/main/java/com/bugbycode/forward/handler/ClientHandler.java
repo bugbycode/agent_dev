@@ -64,7 +64,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		String token = message.getToken();
 		MessageType type = message.getType();
 		
-		if(StringUtil.isNotEmpty(message.getTimezone())) {
+		if(type != MessageType.TRANSFER_DATA && StringUtil.isNotEmpty(message.getTimezone())) {
 			long timeout = DateFormatUtil.getDate(message.getTimezone()).getTime() - message.getTime();
 			if(timeout > 1000) {
 				logger.info("Local date: {}", DateFormatUtil.format(DateFormatUtil.getDate(message.getTimezone())));
