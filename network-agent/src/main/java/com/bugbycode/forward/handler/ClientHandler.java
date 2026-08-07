@@ -11,6 +11,8 @@ import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.module.Message;
 import com.bugbycode.module.MessageType;
+import com.util.DateFormatUtil;
+import com.util.StringUtil;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -61,6 +63,15 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 		Message message = (Message) msg;
 		String token = message.getToken();
 		MessageType type = message.getType();
+		
+		if(StringUtil.isNotEmpty(message.getTimezone())) {
+			long timeout = DateFormatUtil.getDate(message.getTimezone()).getTime() - message.getTime();
+			if(timeout > 500) {
+				logger.info("Local date: {}", DateFormatUtil.format(DateFormatUtil.getDate(message.getTimezone())));
+				logger.info("Server date: {}", DateFormatUtil.format(DateFormatUtil.getDate(message.getTimezone(), message.getTime())));
+				logger.info("Transfer time: {}ms", timeout);
+			}
+		}
 		
 		if(type == MessageType.HEARTBEAT) {
 			//
