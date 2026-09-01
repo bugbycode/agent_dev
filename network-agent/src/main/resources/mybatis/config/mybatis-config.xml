@@ -10,5 +10,6 @@
 	</settings>
 	<typeAliases>
 		<typeAlias alias="host" type="com.bugbycode.module.host.HostModule"/>
+		<typeAlias alias="user" type="com.bugbycode.module.user.UserInfo"/>
 	</typeAliases>
 </configuration>

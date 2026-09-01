@@ -16,8 +16,11 @@ import com.bugbycode.client.startup.NettyClient;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
 import com.bugbycode.mapper.table.TableMapper;
+import com.bugbycode.mapper.user.UserMapper;
+import com.bugbycode.module.user.UserInfo;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
+import com.util.MD5Util;
 import com.util.ProxyUtil;
 
 @Component
@@ -52,10 +55,15 @@ public class AgentStartup implements ApplicationRunner {
 	private HostMapper hostMapper;
 	
 	@Autowired
+	private UserMapper userMapper;
+	
+	@Autowired
 	private TestnetService testnetService;
 	
 	@Autowired
 	private WorkTaskPool workTaskPool;
+	
+	private final String USER_NAME = "admin";
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -66,11 +74,20 @@ public class AgentStartup implements ApplicationRunner {
 	        arg.contains("-agentlib:jdwp")
 	    );
 		
+		tableMapper.initHostTable();
+		tableMapper.initUserTable();
+		
+		UserInfo user = userMapper.loadUserByUsername(USER_NAME);
+		if(user == null) {
+			user = new UserInfo();
+			user.setUsername(USER_NAME);
+			user.setPassword(MD5Util.md5(USER_NAME));
+			userMapper.insert(user);
+		}
+
 		if(isDebugMode) {
 			return;
 		}
-		
-		tableMapper.initHostTable();
 		
 		StartupRunnable startup = new StartupRunnable(host, port,keystorePath, keystorePassword, nettyClientMap); 
 		

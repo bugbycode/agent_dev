@@ -1,5 +1,5 @@
 server:
-  port: 8787
+  port: 8788
 spring:
 #  main:
 #    web-application-type: NONE
@@ -12,14 +12,10 @@ spring:
       driverClassName: org.sqlite.JDBC
   netty: 
     agent: 
-      port: 50000 #自己电脑internet代理端口
+      port: 50001 #自己电脑internet代理端口
       so_backlog: 1024 #代理服务最大连接数
     auth: 
       host: localhost #network-server 部署的ip地址
       port: 36500 #network-server 配置的代理端口
-  web:
-    login: #管理界面账号密码
-      username: root
-      password: china@dev
 loggin:
   config: classpath:log4j2.xml

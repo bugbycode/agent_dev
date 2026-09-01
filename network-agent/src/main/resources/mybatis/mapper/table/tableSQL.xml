@@ -16,4 +16,15 @@
 		]]>
 	</update>
 	
+	<update id="initUserTable">
+		<![CDATA[
+			CREATE TABLE IF NOT EXISTS `user` (
+				`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+				`username` VARCHAR(255),
+				`password` VARCHAR(255)
+			);
+		]]>
+		
+	</update>
+	
 </mapper>
