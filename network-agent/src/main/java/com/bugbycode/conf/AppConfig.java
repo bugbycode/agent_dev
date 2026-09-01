@@ -16,7 +16,9 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import com.bugbycode.agent.server.AgentServer;
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.webapp.pool.WorkTaskPool;
 
 import io.netty.channel.group.ChannelGroup;
@@ -25,6 +27,24 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 @Configuration
 public class AppConfig {
+	
+	public final String DEFAULT_USER_NAME = "admin";
+	
+	public static int AGENT_PORT = 50000;
+	
+	public static int SO_BACK_LOG = 1024;
+	
+	public static int SERVER_PORT = 36500;
+	
+	public static String SERVER_ADDRESS = "localhost";
+	
+	public static int PROXY_STATUS = 0;
+	
+	public static String KEYSTORE_PASSWORD = "";
+	
+	public static StartupRunnable START_UP = null;
+	
+	public static AgentServer SERVER = null;
 	
 	@Bean("channelGroup")
 	public ChannelGroup getChannelGroup() {

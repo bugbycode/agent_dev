@@ -6,17 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.conf.AppConfig;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
+import com.bugbycode.mapper.setting.SettingMapper;
 import com.bugbycode.mapper.table.TableMapper;
 import com.bugbycode.mapper.user.UserMapper;
+import com.bugbycode.module.setting.Setting;
 import com.bugbycode.module.user.UserInfo;
 import com.bugbycode.service.testnet.TestnetService;
 import com.bugbycode.webapp.pool.WorkTaskPool;
@@ -30,24 +32,6 @@ public class AgentStartup implements ApplicationRunner {
 	@Autowired
 	private Map<String,NettyClient> nettyClientMap;
 	
-	@Value("${spring.keystore.path:client.keystore}")
-	private String keystorePath = "";
-	
-	@Value("${spring.keystore.password:changeit}")
-	private String keystorePassword = "";
-	
-	@Value("${spring.netty.auth.host}")
-	private String host;
-	
-	@Value("${spring.netty.auth.port}")
-	private int port;
-	
-	@Value("${spring.netty.agent.port}")
-	private int agentPort;
-	
-	@Value("${spring.netty.agent.so_backlog}")
-	private int soBacklog;
-	
 	@Autowired
 	private TableMapper tableMapper;
 	
@@ -56,6 +40,9 @@ public class AgentStartup implements ApplicationRunner {
 	
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private SettingMapper settingMapper;
 	
 	@Autowired
 	private TestnetService testnetService;
@@ -76,6 +63,7 @@ public class AgentStartup implements ApplicationRunner {
 		
 		tableMapper.initHostTable();
 		tableMapper.initUserTable();
+		tableMapper.initSettingTable();
 		
 		UserInfo user = userMapper.loadUserByUsername(USER_NAME);
 		if(user == null) {
@@ -84,20 +72,29 @@ public class AgentStartup implements ApplicationRunner {
 			user.setPassword(MD5Util.md5(USER_NAME));
 			userMapper.insert(user);
 		}
+		
+		Setting s = settingMapper.getSetting();
+		if(s != null) {
+			AppConfig.AGENT_PORT = s.getAgentPort();
+			AppConfig.SO_BACK_LOG = s.getSoBacklog();
+			AppConfig.SERVER_PORT = s.getServerPort();
+			AppConfig.SERVER_ADDRESS = s.getServerAddress();
+			AppConfig.PROXY_STATUS = s.getProxyStatus();
+			AppConfig.KEYSTORE_PASSWORD = s.getKeystorePassword();
+		}
 
 		if(isDebugMode) {
-			return;
+			//return;
 		}
 		
-		StartupRunnable startup = new StartupRunnable(host, port,keystorePath, keystorePassword, nettyClientMap); 
+		AppConfig.START_UP = new StartupRunnable(nettyClientMap); 
 		
-		new WorkTread(startup).start();
+		new WorkTread(AppConfig.START_UP).start();
 		
-		AgentServer server = new AgentServer(agentPort, soBacklog, nettyClientMap,
-				startup,hostMapper,testnetService,workTaskPool);
-		new Thread(server).start();
+		AppConfig.SERVER = new AgentServer(nettyClientMap, AppConfig.START_UP, hostMapper, testnetService, workTaskPool);
+		new Thread(AppConfig.SERVER).start();
 		
-		ProxyUtil.setProxy("localhost", agentPort);
+		ProxyUtil.setProxy("localhost", AppConfig.AGENT_PORT, AppConfig.PROXY_STATUS);
 		
 	}
 

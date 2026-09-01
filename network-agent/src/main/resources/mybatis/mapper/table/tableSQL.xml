@@ -27,4 +27,18 @@
 		
 	</update>
 	
+	<update id="initSettingTable">
+		<![CDATA[
+			CREATE TABLE IF NOT EXISTS `setting` (
+				`id` INTEGER PRIMARY KEY AUTOINCREMENT,
+				`agentPort` TINYINT(4),
+				`soBacklog` TINYINT(4),
+				`serverPort` TINYINT(4),
+				`serverAddress` VARCHAR(255),
+				`proxyStatus` TINYINT(4),
+				`keystorePassword` VARCHAR(255)
+			);
+		]]>
+	</update>
+	
 </mapper>

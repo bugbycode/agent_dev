@@ -5,4 +5,6 @@ public interface TableMapper {
 	public int initHostTable();
 	
 	public int initUserTable();
+	
+	public int initSettingTable();
 }

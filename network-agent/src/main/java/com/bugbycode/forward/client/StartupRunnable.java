@@ -1,5 +1,6 @@
 package com.bugbycode.forward.client;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -9,12 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.conf.AppConfig;
 import com.bugbycode.config.HandlerConst;
 import com.bugbycode.config.IdleConfig;
 import com.bugbycode.exception.AgentException;
 import com.bugbycode.forward.handler.ClientHandler;
 import com.bugbycode.handler.MessageDecoder;
 import com.bugbycode.handler.MessageEncoder;
+import com.util.OsUtil;
 import com.util.ssl.SSLContextFactory;
 
 import io.netty.bootstrap.Bootstrap;
@@ -35,14 +38,6 @@ public class StartupRunnable implements Runnable {
 
 	private final Logger logger = LogManager.getLogger(StartupRunnable.class);
 	
-	private String host;
-	
-	private int port;
-	
-	private String keyStorePath;
-	
-	private String keyStorePassword;
-	
 	private Map<String,NettyClient> nettyClientMap;
 	
 	private Channel clientChannel;
@@ -51,12 +46,7 @@ public class StartupRunnable implements Runnable {
 	
 	private boolean starting = false;
 	
-	public StartupRunnable(String host, int port,String keyStorePath,String keyStorePassword,
-			Map<String,NettyClient> nettyClientMap) {
-		this.host = host;
-		this.port = port;
-		this.keyStorePath = keyStorePath;
-		this.keyStorePassword = keyStorePassword;
+	public StartupRunnable(Map<String,NettyClient> nettyClientMap) {
 		this.nettyClientMap = nettyClientMap;
 	}
 
@@ -73,7 +63,11 @@ public class StartupRunnable implements Runnable {
 
 			@Override
 			protected void initChannel(SocketChannel ch) throws Exception {
-				SSLEngine engine = SSLContextFactory.getContext(keyStorePath, keyStorePassword).createSSLEngine();
+				
+				String cerDir = OsUtil.getUserHome() + File.separator + ".agentCer";
+				String keystorePath = cerDir + File.separator + "client.p12";
+				
+				SSLEngine engine = SSLContextFactory.getContext(keystorePath, AppConfig.KEYSTORE_PASSWORD).createSSLEngine();
 		        engine.setUseClientMode(true);
 		        ch.pipeline().addLast(new SslHandler(engine));
 		        
@@ -88,15 +82,15 @@ public class StartupRunnable implements Runnable {
 			}
 			
 		});
-		client.connect(host, port).addListener(new ChannelFutureListener() {
+		client.connect(AppConfig.SERVER_ADDRESS, AppConfig.SERVER_PORT).addListener(new ChannelFutureListener() {
 			
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
 					clientChannel = future.channel();
-					logger.info("Connection " + host + ":" + port + " success...");
+					logger.info("Connection " + AppConfig.SERVER_ADDRESS + ":" + AppConfig.SERVER_PORT + " success...");
 				} else{
-					logger.info("Connection " + host + ":" + port + " failed...");
+					logger.info("Connection " + AppConfig.SERVER_ADDRESS + ":" + AppConfig.SERVER_PORT + " failed...");
 				}
 				starting = false;
 			}

@@ -11,18 +11,18 @@ public class ProxyUtil {
 
 	private static final Logger logger = LogManager.getLogger(ProxyUtil.class);
 	
-	public static void setProxy(String host, int port) {
+	public static void setProxy(String host, int port, int proxyStatus) {
 		if(OsUtil.getOsInfo() == SysOs.WINDOWS) {
-			setWindowsProxy(host, port);
+			setWindowsProxy(host, port, proxyStatus);
 		}
 	}
 	
-	public static void setWindowsProxy(String host, int port) {
+	public static void setWindowsProxy(String host, int port, int proxyStatus) {
 		String proxy = "http://" + host + ":" + port;
 		if(OsUtil.getOsInfo() == SysOs.WINDOWS) {
 			try {
 				// 使用 ProcessBuilder 执行 regedit 命令修改注册表
-	            String command = "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyEnable /t REG_DWORD /d 1 /f";
+	            String command = "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyEnable /t REG_DWORD /d " + proxyStatus + " /f";
 	            runCommand(command);
 
 	            command = "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\" /v ProxyServer /t REG_SZ /d \"" + proxy + "\" /f";

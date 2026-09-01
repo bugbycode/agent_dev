@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bugbycode.mapper.setting.SettingMapper">
+	<resultMap type="setting" id="settingResult">
+		<result property="id" 					column="id"/>
+		<result property="agentPort" 			column="agentPort"/>
+		<result property="soBacklog" 			column="soBacklog"/>
+		<result property="serverPort" 			column="serverPort"/>
+		<result property="serverAddress" 		column="serverAddress"/>
+		<result property="proxyStatus" 			column="proxyStatus"/>
+		<result property="keystorePassword" 	column="keystorePassword"/>
+	</resultMap>
+	
+	<select id="getSetting" resultMap="settingResult">
+		<![CDATA[
+			SELECT * FROM setting LIMIT 1 
+		]]>
+	</select>
+	
+	<insert id="insert" parameterType="setting">
+		<![CDATA[
+			INSERT INTO setting (
+				agentPort,
+				soBacklog,
+				serverPort,
+				serverAddress,
+				proxyStatus,
+				keystorePassword
+			) VALUES(
+				#{agentPort},
+				#{soBacklog},
+				#{serverPort},
+				#{serverAddress},
+				#{proxyStatus},
+				#{keystorePassword}
+			)
+		]]>
+	</insert>
+	
+	<update id="update" >
+		<![CDATA[
+			UPDATE 
+				setting 
+			SET 
+				agentPort = #{agentPort},
+				soBacklog = #{soBacklog},
+				serverPort = #{serverPort},
+				serverAddress = #{serverAddress},
+				proxyStatus = #{proxyStatus},
+				keystorePassword = #{keystorePassword} 
+			WHERE id = #{id}
+		]]>
+	</update>
+	
+</mapper>

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.bugbycode.agent.handler.AgentHandler;
 import com.bugbycode.client.startup.NettyClient;
+import com.bugbycode.conf.AppConfig;
 import com.bugbycode.config.IdleConfig;
 import com.bugbycode.forward.client.StartupRunnable;
 import com.bugbycode.mapper.host.HostMapper;
@@ -29,10 +30,6 @@ public class AgentServer implements Runnable {
 	
 	private final Logger logger = LogManager.getLogger(AgentServer.class);
 
-	private int agentPort = 0;
-	
-	private int soBacklog;
-	
 	private EventLoopGroup boss;
 	
 	private EventLoopGroup worker;
@@ -47,14 +44,11 @@ public class AgentServer implements Runnable {
 	
 	private WorkTaskPool workTaskPool;
 	
-	public AgentServer(int agentPort,
-			int soBacklog,
+	public AgentServer(
 			Map<String,NettyClient> nettyClientMap,
 			StartupRunnable startup,
 			HostMapper hostMapper,TestnetService testnetService,
 			WorkTaskPool workTaskPool) {
-		this.agentPort = agentPort;
-		this.soBacklog = soBacklog;
 		this.nettyClientMap = nettyClientMap;
 		this.startup = startup;
 		this.hostMapper = hostMapper;
@@ -68,7 +62,7 @@ public class AgentServer implements Runnable {
 		boss = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		worker = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 		bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-		.option(ChannelOption.SO_BACKLOG, soBacklog)
+		.option(ChannelOption.SO_BACKLOG, AppConfig.SO_BACK_LOG)
 		.option(ChannelOption.SO_REUSEADDR, true)
 		.childOption(ChannelOption.TCP_NODELAY, true)
 		.childOption(ChannelOption.SO_KEEPALIVE, true)
@@ -84,15 +78,15 @@ public class AgentServer implements Runnable {
 			}
 		});
 		
-		bootstrap.bind(agentPort).addListener(new ChannelFutureListener() {
+		bootstrap.bind(AppConfig.AGENT_PORT).addListener(new ChannelFutureListener() {
 
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					logger.info("Agent server startup success, port " + agentPort + ", soBacklog " + soBacklog + " ......");
+					logger.info("Agent server startup success, port " + AppConfig.AGENT_PORT + ", soBacklog " + AppConfig.SO_BACK_LOG + " ......");
 				} else {
 					future.cause().printStackTrace();
-					logger.info("Agent server startup failed, port " + agentPort + "......");
+					logger.info("Agent server startup failed, port " + AppConfig.AGENT_PORT + "......");
 					close();
 				}
 			}
@@ -110,7 +104,12 @@ public class AgentServer implements Runnable {
 			worker.shutdownGracefully();
 		}
 		
-		logger.info("Agent server shutdown, port " + agentPort + "......");
+		logger.info("Agent server shutdown, port " + AppConfig.AGENT_PORT + "......");
 	}
 
+	
+	public void restart() {
+		close();
+		this.run();
+	}
 }
