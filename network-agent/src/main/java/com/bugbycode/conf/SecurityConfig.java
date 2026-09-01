@@ -33,7 +33,7 @@ public class SecurityConfig {
     	
     	.authorizeHttpRequests(authorize -> authorize
     			
-    	        .requestMatchers("/api/home","/api/query","/api/updateForwardById").hasRole("LOGIN")
+    	        .requestMatchers("/api/host/query","/host/api/updateForwardById").hasRole("LOGIN")
     	        
     	        .anyRequest().authenticated()
     	        //.anyRequest().permitAll()
