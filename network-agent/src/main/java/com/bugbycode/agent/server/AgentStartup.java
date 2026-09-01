@@ -1,5 +1,8 @@
 package com.bugbycode.agent.server;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +59,16 @@ public class AgentStartup implements ApplicationRunner {
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		
+		RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+        List<String> arguments = runtimeMxBean.getInputArguments();
+		boolean isDebugMode = arguments.stream().anyMatch(arg ->
+	        arg.contains("-agentlib:jdwp")
+	    );
+		
+		if(isDebugMode) {
+			return;
+		}
 		
 		tableMapper.initHostTable();
 		

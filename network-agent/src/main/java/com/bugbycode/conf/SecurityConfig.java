@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.Customizer;
@@ -18,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Order(0)
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -51,10 +49,10 @@ public class SecurityConfig {
     	
     	.authorizeHttpRequests(authorize -> authorize
     			
-    	        .requestMatchers("/home","/query","/updateForwardById").hasRole("LOGIN")
+    	        .requestMatchers("/api/home","/api/query","/api/updateForwardById").hasRole("LOGIN")
     	        
     	        .anyRequest().authenticated()
-    	        
+    	        //.anyRequest().permitAll()
     			).formLogin(Customizer.withDefaults());
     	
     	return http.build();
