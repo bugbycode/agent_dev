@@ -73,20 +73,10 @@ server:
 spring:
 #  main:
 #    web-application-type: NONE
-  keystore:
-    path: config/client.p12
-    password: china@
   server:
     datasource:
       jdbcUrl: jdbc:sqlite:data.db
       driverClassName: org.sqlite.JDBC
-  netty: 
-    agent: 
-      port: 50000 #自己电脑internet代理端口
-      so_backlog: 1024 #代理服务最大连接数
-    auth: 
-      host: localhost #network-server 部署的ip地址
-      port: 36500 #network-server 配置的代理端口
 loggin:
   config: classpath:log4j2.xml
 ```
