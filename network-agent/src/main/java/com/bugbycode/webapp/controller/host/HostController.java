@@ -16,7 +16,7 @@ import com.util.page.Page;
 import com.util.page.SearchResult;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/host")
 public class HostController {
 	
 	@Autowired
