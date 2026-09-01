@@ -50,8 +50,6 @@ public class AgentStartup implements ApplicationRunner {
 	@Autowired
 	private WorkTaskPool workTaskPool;
 	
-	private final String USER_NAME = "admin";
-	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		
@@ -65,11 +63,11 @@ public class AgentStartup implements ApplicationRunner {
 		tableMapper.initUserTable();
 		tableMapper.initSettingTable();
 		
-		UserInfo user = userMapper.loadUserByUsername(USER_NAME);
+		UserInfo user = userMapper.loadUserByUsername(AppConfig.DEFAULT_USER_NAME);
 		if(user == null) {
 			user = new UserInfo();
-			user.setUsername(USER_NAME);
-			user.setPassword(MD5Util.md5(USER_NAME));
+			user.setUsername(AppConfig.DEFAULT_USER_NAME);
+			user.setPassword(MD5Util.md5(AppConfig.DEFAULT_USER_NAME));
 			userMapper.insert(user);
 		}
 		

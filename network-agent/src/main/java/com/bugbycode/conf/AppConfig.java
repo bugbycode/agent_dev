@@ -28,7 +28,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 @Configuration
 public class AppConfig {
 	
-	public final String DEFAULT_USER_NAME = "admin";
+	public static final String DEFAULT_USER_NAME = "admin";
 	
 	public static int AGENT_PORT = 50000;
 	
