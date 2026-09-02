@@ -66,7 +66,7 @@ keytool -importcert -alias client -keystore client.p12 -storetype "PKCS12" -keyp
 
 ## 代理客户端配置
 
-1、修改network-agent配置文件src/main/resources/application.yml中的spring.netty.auth.host为network-server所部属的ip或域名如下所示：
+1、修改network-agent配置文件src/main/resources/application.yml如下所示：
 ```
 server:
   port: 8787
